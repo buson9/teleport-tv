@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TELEPORT TV | 4K World Escape</title>
+    <title>TELEPORT TV | 4K World</title>
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
         :root { --main-color: #00ff66; }
@@ -64,12 +64,13 @@
         const ch = channels[idx];
         const frame = document.getElementById('tv-frame');
         
-        // Cambiar colores visuales
+        // Cambiar colores
         document.documentElement.style.setProperty('--main-color', ch.color);
         
-        // CORRECCIÓN DE URL: Aseguramos el formato /embed/ y los parámetros correctos
-        const newSrc = "https://www.youtube.com" + ch.id + "?autoplay=1&mute=1&controls=1&rel=0&showinfo=0&iv_load_policy=3&enablejsapi=1";
-        frame.src = newSrc;
+        // URL CONSTRUIDA MANUALMENTE PARA EVITAR ERRORES DE CONCATENACIÓN
+        const baseUrl = "https://www.youtube.com";
+        const params = "?autoplay=1&mute=1&controls=1&rel=0";
+        frame.src = baseUrl + ch.id + params;
         
         document.getElementById('location-label').innerText = "TUNING...";
         document.getElementById('signal-info').innerText = "CH-0" + (idx + 1) + " • " + ch.name;
