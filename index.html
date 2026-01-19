@@ -3,65 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TELEPORT TV | 4K WORLD</title>
+    <title>TELEPORT TV</title>
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
         :root { --main-color: #00ff66; }
         body { background: #050505; color: var(--main-color); font-family: 'VT323', monospace; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
-        header { text-align: center; padding: 15px; }
-        .tv-chassis { width: 95%; max-width: 800px; background: #1a1a1a; border: 12px solid #333; border-radius: 20px; position: relative; overflow: hidden; box-shadow: 0 0 40px rgba(0,0,0,0.9); }
+        .tv-chassis { width: 95%; max-width: 800px; background: #1a1a1a; border: 10px solid #333; border-radius: 20px; position: relative; overflow: hidden; margin-top: 20px; box-shadow: 0 0 40px rgba(0,0,0,0.9); }
         .screen { position: relative; padding-bottom: 56.25%; height: 0; background: #000; }
-        #video-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-        .power-on-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--main-color); color: #000; border: none; padding: 20px 40px; font-family: 'VT323'; font-size: 2rem; cursor: pointer; z-index: 100; border-radius: 10px; }
-        .channel-info { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.8); padding: 5px 12px; border: 1px solid var(--main-color); z-index: 12; }
+        .screen iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
         .location-tag { position: absolute; bottom: 10px; left: 10px; background: var(--main-color); color: #000; padding: 4px 12px; font-size: 1.3rem; z-index: 12; font-weight: bold; }
         .remote { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 20px; width: 90%; max-width: 500px; }
-        .btn-ch { background: transparent; color: var(--main-color); border: 2px solid var(--main-color); padding: 12px; font-family: 'VT323'; font-size: 1.3rem; cursor: pointer; }
+        button { background: transparent; color: var(--main-color); border: 2px solid var(--main-color); padding: 12px; font-family: 'VT323'; font-size: 1.3rem; cursor: pointer; }
+        button:hover { background: var(--main-color); color: #000; }
     </style>
 </head>
 <body>
 
-<header>
+<header style="text-align:center; padding:10px;">
     <h1>TELEPORT TV</h1>
-    <p>4K GLOBAL BROADCAST • 2026</p>
+    <p>4K GLOBAL BROADCAST</p>
 </header>
 
 <div class="tv-chassis">
     <div class="screen">
-        <button id="pwr-btn" class="power-on-btn" onclick="tune('https://www.youtube.com', '#00ff66', 'TOKYO, JAPAN 🇯🇵', 'CH-01 • URBAN')">[ TURN ON TV ]</button>
-        <div id="video-container"></div>
-        <div class="channel-info" id="signal-info">OFFLINE</div>
-        <div id="location-label" class="location-tag">NO SIGNAL</div>
+        <iframe id="tv-frame" 
+            src="https://www.youtube.com" 
+            allow="autoplay; encrypted-media" 
+            allowfullscreen>
+        </iframe>
+        <div id="location-label" class="location-tag">TOKYO, JAPAN 🇯🇵</div>
     </div>
 </div>
 
 <div class="remote">
-    <button class="btn-ch" onclick="tune('https://www.youtube.com', '#00ff66', 'TOKYO, JAPAN 🇯🇵', 'CH-01 • URBAN')">[ 🌿 JUNGLE ]</button>
-    <button class="btn-ch" onclick="tune('https://www.youtube.com', '#00e1ff', 'ZERMATT, SWISS 🇨🇭', 'CH-02 • MOUNTAIN')">[ 🏔️ ALPS ]</button>
-    <button class="btn-ch" onclick="tune('https://www.youtube.com', '#ffaa00', 'PHUKET, THAILAND 🇹🇭', 'CH-03 • COAST')">[ 🏖️ COAST ]</button>
-    <button class="btn-ch" onclick="tune('https://www.youtube.com', '#7a82ff', 'LONDON, UK 🇬🇧', 'CH-04 • RAINY')">[ 🌧️ RAIN ]</button>
+    <button onclick="tune('V9yjeX7_m_I', '#00ff66', 'TOKYO, JAPAN 🇯🇵')">[ 🌿 JUNGLE ]</button>
+    <button onclick="tune('Y_8K5y8K8e4', '#00e1ff', 'ZERMATT, SWISS 🇨🇭')">[ 🏔️ ALPS ]</button>
+    <button onclick="tune('l_OOnGvU48Y', '#ffaa00', 'PHUKET, THAILAND 🇹🇭')">[ 🏖️ COAST ]</button>
+    <button onclick="tune('Su00m_XIn28', '#7a82ff', 'LONDON, UK 🇬🇧')">[ 🌧️ RAIN ]</button>
 </div>
 
 <script>
-    function tune(fullUrl, color, loc, name) {
-        // Ocultar el botón de encendido
-        document.getElementById('pwr-btn').style.display = 'none';
-        
-        // Cambiar el color de la interfaz
+    function tune(id, color, loc) {
         document.documentElement.style.setProperty('--main-color', color);
-        
-        // Inyectar el Iframe con la URL ABSOLUTA (sin procesar texto)
-        var container = document.getElementById('video-container');
-        container.innerHTML = '<iframe width="100%" height="100%" src="' + fullUrl + '" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
-
-        // Actualizar textos
-        document.getElementById('signal-info').innerText = name;
-        document.getElementById('location-label').innerText = "TUNING...";
-        
-        setTimeout(function() {
-            document.getElementById('location-label').innerText = loc;
-        }, 1000);
+        // Construimos la URL asegurando que el ID esté separado por /
+        var finalUrl = "https://www.youtube.com" + id + "?autoplay=1&mute=1&enablejsapi=1";
+        document.getElementById('tv-frame').src = finalUrl;
+        document.getElementById('location-label').innerText = loc;
     }
 </script>
+
 </body>
 </html>
