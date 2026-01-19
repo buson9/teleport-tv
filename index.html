@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TELEPORT TV | 4K World Escape</title>
+    <title>TELEPORT TV | 4K World</title>
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
         :root { --main-color: #00ff66; }
-        body { background: #050505; color: var(--main-color); font-family: 'VT323', monospace; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; transition: 0.5s; }
+        body { background: #050505; color: var(--main-color); font-family: 'VT323', monospace; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
         header { text-align: center; padding: 15px; }
         .tv-chassis { width: 95%; max-width: 800px; background: #1a1a1a; border: 10px solid #333; border-radius: 20px; position: relative; overflow: hidden; box-shadow: 0 0 40px rgba(0,0,0,0.9); }
         .screen { position: relative; padding-bottom: 56.25%; height: 0; background: #000; display: flex; align-items: center; justify-content: center; }
@@ -26,7 +26,7 @@
 
 <header>
     <h1>TELEPORT TV</h1>
-    <p>GLOBAL 4K BROADCAST • SYSTEM ONLINE</p>
+    <p>4K GLOBAL BROADCAST • 2026</p>
 </header>
 
 <div class="tv-chassis">
@@ -40,47 +40,36 @@
 </div>
 
 <div class="remote-control">
-    <button onclick="changeTV(0)">[ 🌿 JUNGLE ]</button>
-    <button onclick="changeTV(1)">[ 🏔️ ALPS ]</button>
-    <button onclick="changeTV(2)">[ 🏖️ COAST ]</button>
-    <button onclick="changeTV(3)">[ 🌧️ RAIN ]</button>
+    <button onclick="tune('https://www.youtube.com', '#00ff66', 'TOKYO, JAPAN 🇯🇵', 'CH-01 • URBAN')">[ 🌿 JUNGLE ]</button>
+    <button onclick="tune('https://www.youtube.com', '#00e1ff', 'ZERMATT, SWISS 🇨🇭', 'CH-02 • MOUNTAIN')">[ 🏔️ ALPS ]</button>
+    <button onclick="tune('https://www.youtube.com', '#ffaa00', 'PHUKET, THAILAND 🇹🇭', 'CH-03 • COAST')">[ 🏖️ COAST ]</button>
+    <button onclick="tune('https://www.youtube.com', '#7a82ff', 'LONDON, UK 🇬🇧', 'CH-04 • RAINY')">[ 🌧️ RAIN ]</button>
 </div>
 
 <div class="footer">
-    <p>Support via <a href="TU_LINK_TAKENOS" style="color:var(--main-color)">Takenos</a> | Teleport TV Bolivia 2026</p>
+    <p>Support this project via <a href="TU_LINK_TAKENOS" style="color:var(--main-color)">Takenos</a> | Bolivia 2026</p>
 </div>
 
 <script>
-    // Datos maestros con URLs completas para evitar errores de pegado
-    const channels = [
-        { id: "V9yjeX7_m_I", color: "#00ff66", loc: "TOKYO, JAPAN 🇯🇵", name: "CH-01 • URBAN" },
-        { id: "Y_8K5y8K8e4", color: "#00e1ff", loc: "ZERMATT, SWISS 🇨🇭", name: "CH-02 • MOUNTAIN" },
-        { id: "l_OOnGvU48Y", color: "#ffaa00", loc: "PHUKET, THAILAND 🇹🇭", name: "CH-03 • COAST" },
-        { id: "Su00m_XIn28", color: "#7a82ff", loc: "LONDON, UK 🇬🇧", name: "CH-04 • RAINY" }
-    ];
-
     function powerOn() {
         document.getElementById('power-btn').style.display = 'none';
         document.getElementById('tv-frame').style.display = 'block';
-        changeTV(0);
+        // Sintoniza el primer canal manualmente al encender
+        tune('https://www.youtube.com', '#00ff66', 'TOKYO, JAPAN 🇯🇵', 'CH-01 • URBAN');
     }
 
-    function changeTV(idx) {
-        const ch = channels[idx];
+    function tune(fullUrl, color, location, channelName) {
         const frame = document.getElementById('tv-frame');
+        document.documentElement.style.setProperty('--main-color', color);
         
-        // Cambio de colores
-        document.documentElement.style.setProperty('--main-color', ch.color);
+        // Cargamos la URL completa sin procesar nada para evitar errores de texto
+        frame.src = fullUrl;
         
-        // Carga de URL limpia
-        frame.src = "https://www.youtube.com" + ch.id + "?autoplay=1&mute=1&rel=0";
-        
-        // UI Updates
         document.getElementById('location-label').innerText = "TUNING...";
-        document.getElementById('signal-info').innerText = ch.name;
+        document.getElementById('signal-info').innerText = channelName;
         
         setTimeout(() => {
-            document.getElementById('location-label').innerText = ch.loc;
+            document.getElementById('location-label').innerText = location;
         }, 800);
     }
 </script>
