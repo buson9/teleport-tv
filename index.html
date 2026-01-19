@@ -27,7 +27,7 @@
 
 <div class="tv-chassis">
     <div class="screen">
-        <!-- El primer canal ya viene con la URL completa escrita a mano -->
+        <!-- Primer canal con URL completa y terminada -->
         <iframe id="tv-frame" 
             src="https://www.youtube.com" 
             allow="autoplay; encrypted-media" 
@@ -38,6 +38,7 @@
 </div>
 
 <div class="remote">
+    <!-- URLs manuales y cerradas. Sin variables, sin errores de conexión -->
     <button onclick="tune('https://www.youtube.com', '#00ff66', 'TOKYO, JAPAN 🇯🇵')">[ 🌿 JUNGLE ]</button>
     <button onclick="tune('https://www.youtube.com', '#00e1ff', 'ZERMATT, SWISS 🇨🇭')">[ 🏔️ ALPS ]</button>
     <button onclick="tune('https://www.youtube.com', '#ffaa00', 'PHUKET, THAILAND 🇹🇭')">[ 🏖️ COAST ]</button>
@@ -45,13 +46,12 @@
 </div>
 
 <script>
-    function tune(fullUrl, color, loc) {
+    function tune(urlCompleta, color, loc) {
         // Cambiar el color de la interfaz
         document.documentElement.style.setProperty('--main-color', color);
         
-        // Sintonizar usando la URL completa enviada desde el botón
-        const frame = document.getElementById('tv-frame');
-        frame.src = fullUrl + "&enablejsapi=1&origin=" + window.location.origin;
+        // Sintonizar usando la URL exacta del botón
+        document.getElementById('tv-frame').src = urlCompleta;
         
         document.getElementById('location-label').innerText = "TUNING...";
         setTimeout(() => {
