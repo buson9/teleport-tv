@@ -3,62 +3,183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TELEPORT TV | 4K 2026</title>
+    <title>TELEPORT TV | 4K World Immersive Experience</title>
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
-        :root { --main-color: #00ff66; }
-        body { background: #050505; color: var(--main-color); font-family: 'VT323', monospace; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
-        header { text-align: center; padding: 10px; }
-        .tv-chassis { width: 95%; max-width: 800px; background: #1a1a1a; border: 12px solid #333; border-radius: 20px; position: relative; overflow: hidden; box-shadow: 0 0 40px rgba(0,0,0,0.9); }
-        .screen { position: relative; padding-bottom: 56.25%; height: 0; background: #000; }
-        .screen iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-        .location-tag { position: absolute; bottom: 10px; left: 10px; background: var(--main-color); color: #000; padding: 4px 12px; font-size: 1.3rem; z-index: 12; font-weight: bold; }
-        .remote { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; width: 90%; max-width: 500px; }
-        button { background: transparent; color: var(--main-color); border: 2px solid var(--main-color); padding: 12px; font-family: 'VT323'; font-size: 1.3rem; cursor: pointer; transition: 0.3s; }
-        button:hover { background: var(--main-color); color: #000; }
+        :root { --neon-green: #00ff66; --tv-gray: #1a1a1a; }
+        body { background: #0a0a0a; color: var(--neon-green); font-family: 'VT323', monospace; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        
+        header { text-align: center; padding: 20px; }
+        h1 { font-size: 3rem; text-shadow: 2px 2px #ff0055; margin: 0; }
+
+        .tv-chassis { width: 95%; max-width: 900px; background: #222; border: 20px solid #333; border-radius: 40px; position: relative; box-shadow: 0 0 40px rgba(0,0,0,0.9); }
+        .screen { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 10px; background: #000; }
+        .screen iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; pointer-events: auto; }
+        
+        .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        .scanlines { background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%); background-size: 100% 4px; z-index: 10; }
+        .vignette { box-shadow: inset 0 0 100px rgba(0,0,0,0.7); z-index: 11; }
+
+        .channel-info { position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.8); padding: 10px 20px; border: 1px solid var(--neon-green); z-index: 12; }
+        .location-tag { position: absolute; bottom: 20px; left: 20px; background: rgba(0,255,102,0.2); color: #fff; padding: 5px 15px; font-size: 1.5rem; z-index: 12; backdrop-filter: blur(5px); }
+
+        .remote-control { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 30px; width: 100%; max-width: 600px; padding: 0 20px; }
+        button { background: #1a1a1a; color: var(--neon-green); border: 2px solid var(--neon-green); padding: 15px; font-family: 'VT323', monospace; font-size: 1.4rem; cursor: pointer; transition: 0.2s; }
+        button:hover { background: var(--neon-green); color: #000; box-shadow: 0 0 15px var(--neon-green); }
+        button:active { transform: scale(0.95); }
+
+        .credits-area { margin-top: 40px; padding: 20px; text-align: center; max-width: 800px; color: #888; line-height: 1.4; border-top: 1px solid #333; }
+        .credits-area a { color: var(--neon-green); text-decoration: none; border-bottom: 1px dashed; }
+        .donation-box { margin-top: 20px; background: #111; padding: 15px; border: 1px solid #444; }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>TELEPORT TV</h1>
-    <p>4K GLOBAL BROADCAST • IMMERSIVE SYSTEM</p>
-</header>
+    <header>
+        <h1 id="main-title">TELEPORT TV</h1>
+        <p id="welcome-msg">ESCAPE REALITY • 4K IMMERSIVE SLOW TV</p>
+    </header>
 
-<div class="tv-chassis">
-    <div class="screen">
-        <!-- Primer canal con URL completa y terminada -->
-        <iframe id="tv-frame" 
-            src="https://www.youtube.com" 
-            allow="autoplay; encrypted-media" 
-            allowfullscreen>
-        </iframe>
-        <div id="location-label" class="location-tag">TOKYO, JAPAN 🇯🇵</div>
+    <div class="tv-chassis">
+        <div class="screen">
+            <div id="player"></div>
+            <div class="overlay scanlines"></div>
+            <div class="overlay vignette"></div>
+            <div class="channel-info">
+                <div id="ch-number">CH-01</div>
+                <div id="signal">SIGNAL: EXCELLENT</div>
+            </div>
+            <div id="location-label" class="location-tag">INITIALIZING...</div>
+        </div>
     </div>
-</div>
 
-<div class="remote">
-    <!-- URLs manuales y cerradas. Sin variables, sin errores de conexión -->
-    <button onclick="tune('https://www.youtube.com', '#00ff66', 'TOKYO, JAPAN 🇯🇵')">[ 🌿 JUNGLE ]</button>
-    <button onclick="tune('https://www.youtube.com', '#00e1ff', 'ZERMATT, SWISS 🇨🇭')">[ 🏔️ ALPS ]</button>
-    <button onclick="tune('https://www.youtube.com', '#ffaa00', 'PHUKET, THAILAND 🇹🇭')">[ 🏖️ COAST ]</button>
-    <button onclick="tune('https://www.youtube.com', '#7a82ff', 'LONDON, UK 🇬🇧')">[ 🌧️ RAIN ]</button>
-</div>
+    <div class="remote-control">
+        <button onclick="switchChannel(0)"> URBAN JUNGLE</button>
+        <button onclick="switchChannel(1)"> NATURE ESCAPE</button>
+        <button onclick="switchChannel(2)"> CHILL COASTS</button>
+        <button onclick="switchChannel(3)"> RAINY DAYS</button>
+    </div>
 
-<script>
-    function tune(urlCompleta, color, loc) {
-        // Cambiar el color de la interfaz
-        document.documentElement.style.setProperty('--main-color', color);
+    <div class="credits-area">
+        <div class="donation-box">
+            <span id="donate-text">Support this project via Takenos / Crypto:</span> <br>
+            <a href="TU_LINK_DE_TAKENOS_AQUI" target="_blank" style="font-size: 1.5rem;">[ CLICK HERE TO BUY A COFFEE ]</a>
+        </div>
+        <p id="legal-disclaimer">
+            <b>CREDITS:</b> We express our deepest gratitude to the creators: 
+            <a href="https://www.youtube.com" target="_blank">4K WALK</a>, 
+            <a href="https://www.youtube.com" target="_blank">Prowalk Tours</a>, 
+            <a href="https://www.youtube.com" target="_blank">Nomadic Ambiance</a>. 
+            This site is a curated non-profit fan project. All views and ad revenue belong to the original creators via YouTube Embed.
+        </p>
+    </div>
+
+    <!-- CARGA DE LA API DE YOUTUBE -->
+    <script src="https://www.youtube.com"></script>
+
+    <!-- LÓGICA DEL REPRODUCTOR MEJORADA -->
+    <script>
+        let player;
         
-        // Sintonizar usando la URL exacta del botón
-        document.getElementById('tv-frame').src = urlCompleta;
-        
-        document.getElementById('location-label').innerText = "TUNING...";
-        setTimeout(() => {
-            document.getElementById('location-label').innerText = loc;
-        }, 800);
-    }
-</script>
+        const PLAYLISTS = [ // Renombrado a mayúsculas para mejor lectura
+            { // Urban
+                name: "URBAN JUNGLE",
+                vids: [
+                    {id: "V9yjeX7_m_I", loc: "Shinjuku, Tokyo 🇯🇵"},
+                    {id: "F8MN0o6RS9o", loc: "Manhattan, NYC 🇺🇸"},
+                    {id: "7km_7id7O9w", loc: "Paris by Night 🇫🇷"}
+                ]
+            },
+            { // Nature
+                name: "NATURE ESCAPE",
+                vids: [
+                    {id: "Y_8K5y8K8e4", loc: "Swiss Alps 🇨🇭"},
+                    {id: "i3p6j0G1A_o", loc: "Norway Fjords 🇳🇴"},
+                    {id: "6uS97A_13vY", loc: "Patagonia, Chile 🇨🇱"}
+                ]
+            },
+            { // Chill
+                name: "CHILL COASTS",
+                vids: [
+                    {id: "l_OOnGvU48Y", loc: "Phuket, Thailand 🇹🇭"},
+                    {id: "Nmmsl2X_v_U", loc: "Ipanema, Brazil 🇧🇷"},
+                    {id: "0nTO4zSEpOs", loc: "Maldives Islands 🇲🇻"}
+                ]
+            },
+            { // Rain
+                name: "RAINY DAYS",
+                vids: [
+                    {id: "Su00m_XIn28", loc: "London Rain 🇬🇧"},
+                    {id: "mPZkdNFkNps", loc: "Rainy Seoul 🇰🇷"},
+                    {id: "gS_T78f0q8A", loc: "Seattle Mist 🇺🇸"}
+                ]
+            }
+        ];
 
+        // Detección de idioma básico (mantenido)
+        const userLang = navigator.language || navigator.userLanguage;
+        if (userLang.includes('es')) {
+            document.getElementById('welcome-msg').innerText = "ESCAPA DE LA REALIDAD • TV LENTA INMERSIVA 4K";
+            document.getElementById('donate-text').innerText = "Apoya este proyecto vía Takenos / Cripto:";
+            document.getElementById('signal').innerText = "SEÑAL: EXCELENTE";
+        }
+
+        // Función que llama la API de YouTube cuando está lista
+        function onYouTubeIframeAPIReady() {
+            // Selecciona un video aleatorio del primer canal (índice 0)
+            const firstChannelVideos = PLAYLISTS[0].vids;
+            const randomStartVideo = firstChannelVideos[Math.floor(Math.random() * firstChannelVideos.length)];
+            
+            initializePlayer(randomStartVideo.id, randomStartVideo.loc);
+        }
+
+        // Nueva función de inicialización para mayor claridad
+        function initializePlayer(videoId, locationLabelText) {
+             player = new YT.Player('player', {
+                height: '100%',
+                width: '100%',
+                videoId: videoId,
+                playerVars: { 
+                    'autoplay': 1, // El navegador puede bloquear esto hasta que el usuario haga clic
+                    'controls': 1, 
+                    'modestbranding': 1,
+                    'rel': 0
+                },
+                events: {
+                    'onReady': (event) => {
+                        // Intentamos silenciar y reproducir, pero puede requerir clic manual
+                        event.target.mute(); 
+                        event.target.playVideo().catch(e => console.log("Autoplay blocked, user must click play.")); 
+                        document.getElementById('location-label').innerText = locationLabelText;
+                    },
+                    'onError': (event) => {
+                        document.getElementById('location-label').innerText = "ERROR DE CARGA DE VIDEO";
+                        console.error("YouTube Player Error Code:", event.data);
+                    }
+                }
+            });
+        }
+
+        // Función llamada por los botones (switchChannel)
+        function switchChannel(chIndex) {
+            const channelVideos = PLAYLISTS[chIndex].vids;
+            const randomVid = channelVideos[Math.floor(Math.random() * channelVideos.length)];
+            
+            // Si el reproductor ya existe, solo carga el nuevo video
+            if (player) {
+                player.loadVideoById(randomVid.id);
+            } else {
+                // Si por alguna razón no se inicializó, lo crea
+                initializePlayer(randomVid.id, randomVid.loc);
+            }
+
+            document.getElementById('ch-number').innerText = "CH-0" + (chIndex + 1);
+            document.getElementById('location-label').innerText = "TUNING...";
+            
+            setTimeout(() => {
+                document.getElementById('location-label').innerText = randomVid.loc;
+            }, 1500);
+        }
+    </script>
 </body>
 </html>
