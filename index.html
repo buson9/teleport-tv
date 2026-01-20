@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TELEPORT TV | 4K World Immersive Experience</title>
-    <!-- Incluimos la fuente VT323 desde Google Fonts para la interfaz retro -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <style>
         :root { --neon-green: #00ff66; --tv-gray: #1a1a1a; }
@@ -13,27 +12,22 @@
         header { text-align: center; padding: 20px; }
         h1 { font-size: 3rem; text-shadow: 2px 2px #ff0055; margin: 0; }
 
-        /* Contenedor de la TV */
         .tv-chassis { width: 95%; max-width: 900px; background: #222; border: 20px solid #333; border-radius: 40px; position: relative; box-shadow: 0 0 40px rgba(0,0,0,0.9); }
         .screen { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 10px; background: #000; }
         .screen iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; pointer-events: auto; }
         
-        /* Efecto CRT Overlays */
         .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
         .scanlines { background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%); background-size: 100% 4px; z-index: 10; }
         .vignette { box-shadow: inset 0 0 100px rgba(0,0,0,0.7); z-index: 11; }
 
-        /* Información en pantalla */
         .channel-info { position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.8); padding: 10px 20px; border: 1px solid var(--neon-green); z-index: 12; }
         .location-tag { position: absolute; bottom: 20px; left: 20px; background: rgba(0,255,102,0.2); color: #fff; padding: 5px 15px; font-size: 1.5rem; z-index: 12; backdrop-filter: blur(5px); }
 
-        /* Botonera */
         .remote-control { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 30px; width: 100%; max-width: 600px; padding: 0 20px; }
         button { background: #1a1a1a; color: var(--neon-green); border: 2px solid var(--neon-green); padding: 15px; font-family: 'VT323', monospace; font-size: 1.4rem; cursor: pointer; transition: 0.2s; }
         button:hover { background: var(--neon-green); color: #000; box-shadow: 0 0 15px var(--neon-green); }
         button:active { transform: scale(0.95); }
 
-        /* Créditos y Donaciones */
         .credits-area { margin-top: 40px; padding: 20px; text-align: center; max-width: 800px; color: #888; line-height: 1.4; border-top: 1px solid #333; }
         .credits-area a { color: var(--neon-green); text-decoration: none; border-bottom: 1px dashed; }
         .donation-box { margin-top: 20px; background: #111; padding: 15px; border: 1px solid #444; }
@@ -80,14 +74,19 @@
         </p>
     </div>
 
-    <!-- CARGA DE LA API DE YOUTUBE OFICIAL -->
-    <script src="https://www.youtube.com"></script>
+    <!-- Carga Asíncrona de la API de YouTube -->
+    <script>
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    </script>
 
-    <!-- LÓGICA DEL REPRODUCTOR REESCRITA -->
+
+    <!-- LÓGICA DEL REPRODUCTOR REESCRITA Y REUBICADA -->
     <script>
         let player;
 
-        // Definición de listas de reproducción (constante global)
         const PLAYLISTS = [
             {vids: [{id: "V9yjeX7_m_I", loc: "Shinjuku, Tokyo 🇯🇵"}, {id: "F8MN0o6RS9o", loc: "Manhattan, NYC 🇺🇸"}, {id: "7km_7id7O9w", loc: "Paris by Night 🇫🇷"}]},
             {vids: [{id: "Y_8K5y8K8e4", loc: "Swiss Alps 🇨🇭"}, {id: "i3p6j0G1A_o", loc: "Norway Fjords 🇳🇴"}, {id: "6uS97A_13vY", loc: "Patagonia, Chile 🇨🇱"}]},
@@ -95,19 +94,19 @@
             {vids: [{id: "Su00m_XIn28", loc: "London Rain 🇬🇧"}, {id: "mPZkdNFkNps", loc: "Rainy Seoul 🇰🇷"}, {id: "gS_T78f0q8A", loc: "Seattle Mist 🇺🇸"}]}
         ];
 
-        // Detección de idioma básico (mantenido de su original)
         const userLang = navigator.language || navigator.userLanguage;
         if (userLang.includes('es')) {
             document.getElementById('welcome-msg').innerText = "ESCAPA DE LA REALIDAD • TV LENTA INMERSIVA 4K";
             document.getElementById('donate-text').innerText = "Apoya este proyecto vía Takenos / Cripto:";
             document.getElementById('signal').innerText = "SEÑAL: EXCELENTE";
         }
+        
+        // --- FUNCIONES GLOBALES REQUERIDAS POR LA API DE YOUTUBE ---
 
-        // 1. Esta función es llamada automáticamente por la API de YouTube cuando termina de cargar.
+        // 1. La API llama a esta función cuando termina de cargarse.
         function onYouTubeIframeAPIReady() {
             console.log("API de YouTube lista. Inicializando reproductor.");
-
-            // Tomamos el primer video del primer canal (índice 0)
+            // Corregimos la lógica: accedemos al primer elemento [0] del array PLAYLISTS
             const firstChannelVideos = PLAYLISTS[0].vids; 
             const randomStartVideo = firstChannelVideos[Math.floor(Math.random() * firstChannelVideos.length)];
             
@@ -130,7 +129,6 @@
                     'onReady': (event) => {
                         console.log("Reproductor listo. Intentando autoplay/mute.");
                         event.target.mute(); 
-                        // Intenta reproducir. Si el navegador lo bloquea, el usuario debe hacer clic.
                         event.target.playVideo().catch(err => console.warn("Autoplay was blocked by the browser policy.", err)); 
                         document.getElementById('location-label').innerText = locationLabelText;
                     },
@@ -142,24 +140,25 @@
             });
         }
 
-        // 3. Esta función es llamada por los botones HTML (onclick="switchChannel(0)")
+        // 3. Esta función es llamada por los botones HTML (onclick)
         function switchChannel(chIndex) {
-            const channelVideos = PLAYLISTS[chIndex].vids;
-            const randomVid = channelVideos[Math.floor(Math.random() * channelVideos.length)];
-            
-            if (player && typeof player.loadVideoById === 'function') {
+            // Aseguramos que solo se ejecute si YT está definido (soluciona el error ReferenceError: YT is not defined)
+            if (typeof YT !== 'undefined' && YT.Player && player) {
+                const channelVideos = PLAYLISTS[chIndex].vids;
+                const randomVid = channelVideos[Math.floor(Math.random() * channelVideos.length)];
+                
                 player.loadVideoById(randomVid.id);
-            } else {
-                console.error("El reproductor no está inicializado correctamente, recargando...");
-                initializePlayer(randomVid.id, randomVid.loc);
-            }
 
-            document.getElementById('ch-number').innerText = "CH-0" + (chIndex + 1);
-            document.getElementById('location-label').innerText = "TUNING...";
-            
-            setTimeout(() => {
-                document.getElementById('location-label').innerText = randomVid.loc;
-            }, 1500);
+                document.getElementById('ch-number').innerText = "CH-0" + (chIndex + 1);
+                document.getElementById('location-label').innerText = "TUNING...";
+                
+                setTimeout(() => {
+                    document.getElementById('location-label').innerText = randomVid.loc;
+                }, 1500);
+            } else {
+                console.error("No se pudo cambiar de canal porque la API de YouTube no se ha cargado completamente.");
+                document.getElementById('location-label').innerText = "Cargando API, por favor espera...";
+            }
         }
     </script>
 </body>
