@@ -14,7 +14,8 @@
 
         .tv-chassis { width: 95%; max-width: 900px; background: #222; border: 20px solid #333; border-radius: 40px; position: relative; box-shadow: 0 0 40px rgba(0,0,0,0.9); }
         .screen { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 10px; background: #000; }
-        .screen iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; pointer-events: auto; }
+        /* El iframe ahora tiene un ID que controlamos con JS */
+        .screen iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
         
         .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
         .scanlines { background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%); background-size: 100% 4px; z-index: 10; }
@@ -42,7 +43,8 @@
 
     <div class="tv-chassis">
         <div class="screen">
-            <div id="player"></div>
+            <!-- Reproductor de video de YouTube simple. La URL es inicializada por JS. -->
+            <iframe id="youtube-iframe" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
             <div class="overlay scanlines"></div>
             <div class="overlay vignette"></div>
             <div class="channel-info">
@@ -74,19 +76,9 @@
         </p>
     </div>
 
-    <!-- Carga Asíncrona de la API de YouTube -->
+    <!-- LÓGICA DEL REPRODUCTOR SIMPLE -->
     <script>
-        var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-    </script>
-
-
-    <!-- LÓGICA DEL REPRODUCTOR REESCRITA Y REUBICADA -->
-    <script>
-        let player;
-
+        // Definición de listas de reproducción
         const PLAYLISTS = [
             {vids: [{id: "V9yjeX7_m_I", loc: "Shinjuku, Tokyo 🇯🇵"}, {id: "F8MN0o6RS9o", loc: "Manhattan, NYC 🇺🇸"}, {id: "7km_7id7O9w", loc: "Paris by Night 🇫🇷"}]},
             {vids: [{id: "Y_8K5y8K8e4", loc: "Swiss Alps 🇨🇭"}, {id: "i3p6j0G1A_o", loc: "Norway Fjords 🇳🇴"}, {id: "6uS97A_13vY", loc: "Patagonia, Chile 🇨🇱"}]},
@@ -94,6 +86,7 @@
             {vids: [{id: "Su00m_XIn28", loc: "London Rain 🇬🇧"}, {id: "mPZkdNFkNps", loc: "Rainy Seoul 🇰🇷"}, {id: "gS_T78f0q8A", loc: "Seattle Mist 🇺🇸"}]}
         ];
 
+        // Detección de idioma básico
         const userLang = navigator.language || navigator.userLanguage;
         if (userLang.includes('es')) {
             document.getElementById('welcome-msg').innerText = "ESCAPA DE LA REALIDAD • TV LENTA INMERSIVA 4K";
@@ -101,65 +94,33 @@
             document.getElementById('signal').innerText = "SEÑAL: EXCELENTE";
         }
         
-        // --- FUNCIONES GLOBALES REQUERIDAS POR LA API DE YOUTUBE ---
-
-        // 1. La API llama a esta función cuando termina de cargarse.
-        function onYouTubeIframeAPIReady() {
-            console.log("API de YouTube lista. Inicializando reproductor.");
-            // Corregimos la lógica: accedemos al primer elemento [0] del array PLAYLISTS
-            const firstChannelVideos = PLAYLISTS[0].vids; 
-            const randomStartVideo = firstChannelVideos[Math.floor(Math.random() * firstChannelVideos.length)];
-            
-            initializePlayer(randomStartVideo.id, randomStartVideo.loc);
-        }
-
-        // 2. Función para crear la instancia del reproductor
-        function initializePlayer(videoId, locationLabelText) {
-             player = new YT.Player('player', {
-                height: '100%',
-                width: '100%',
-                videoId: videoId,
-                playerVars: { 
-                    'autoplay': 1,
-                    'controls': 1, 
-                    'modestbranding': 1,
-                    'rel': 0
-                },
-                events: {
-                    'onReady': (event) => {
-                        console.log("Reproductor listo. Intentando autoplay/mute.");
-                        event.target.mute(); 
-                        event.target.playVideo().catch(err => console.warn("Autoplay was blocked by the browser policy.", err)); 
-                        document.getElementById('location-label').innerText = locationLabelText;
-                    },
-                    'onError': (event) => {
-                        console.error("Error en el reproductor de YouTube:", event.data);
-                        document.getElementById('location-label').innerText = "ERROR DE CARGA (Código: " + event.data + ") - Intenta hacer clic en Play";
-                    }
-                }
-            });
-        }
-
-        // 3. Esta función es llamada por los botones HTML (onclick)
+        // Función principal para cambiar de canal (llamada por los botones y al cargar)
         function switchChannel(chIndex) {
-            // Aseguramos que solo se ejecute si YT está definido (soluciona el error ReferenceError: YT is not defined)
-            if (typeof YT !== 'undefined' && YT.Player && player) {
-                const channelVideos = PLAYLISTS[chIndex].vids;
-                const randomVid = channelVideos[Math.floor(Math.random() * channelVideos.length)];
-                
-                player.loadVideoById(randomVid.id);
+            const channelVideos = PLAYLISTS[chIndex].vids;
+            // Selecciona un video aleatorio dentro de ese canal
+            const randomVid = channelVideos[Math.floor(Math.random() * channelVideos.length)];
+            
+            const iframe = document.getElementById('youtube-iframe');
+            
+            // Construye la URL de incrustación de YouTube directamente
+            // 'mute=1' silencia para intentar el autoplay, pero aun puede requerir clic manual.
+            // 'autoplay=1' intenta iniciar la reproducción.
+            iframe.src = `https://www.youtube.com{randomVid.id}?autoplay=1&controls=1&modestbranding=1&rel=0&mute=1`;
 
-                document.getElementById('ch-number').innerText = "CH-0" + (chIndex + 1);
-                document.getElementById('location-label').innerText = "TUNING...";
-                
-                setTimeout(() => {
-                    document.getElementById('location-label').innerText = randomVid.loc;
-                }, 1500);
-            } else {
-                console.error("No se pudo cambiar de canal porque la API de YouTube no se ha cargado completamente.");
-                document.getElementById('location-label').innerText = "Cargando API, por favor espera...";
-            }
+            document.getElementById('ch-number').innerText = "CH-0" + (chIndex + 1);
+            document.getElementById('location-label').innerText = "TUNING...";
+            
+            // Simula el tiempo que tarda en cargar el nuevo video para actualizar la ubicación
+            setTimeout(() => {
+                document.getElementById('location-label').innerText = randomVid.loc;
+            }, 1500);
         }
+
+        // Inicia el primer canal cuando la página se carga por primera vez
+        document.addEventListener('DOMContentLoaded', (event) => {
+            switchChannel(0); 
+        });
+
     </script>
 </body>
 </html>
