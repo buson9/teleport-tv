@@ -223,6 +223,7 @@
         <div class="screen">
             <div id="start-button-overlay">
                 <p id="loading-message">Cargando TV... Por favor, espere a que la API esté lista.</p>
+                <!-- CORRECCIÓN DE TYPO: Llama a initializePlayback() -->
                 <button id="start-button" onclick="initializePlayback()" style="display:none;">▶ INICIAR TELEPORT TV</button>
             </div>
             <div id="player"></div>
@@ -282,7 +283,6 @@
             { id: '9hXQo9hM-i4', type: 'video', title: 'Viento en los Árboles (Sonidos)', creator: 'Nature Sounds', category: 'Naturaleza', channelUrl: 'https://www.youtube.com' },
         ];
 
-        // Se asegura de que la función onYouTubeIframeAPIReady sea global y esté disponible para la API
         window.onYouTubeIframeAPIReady = function() {
             player = new YT.Player('player', {
                 videoId: '',
@@ -307,6 +307,7 @@
             populateCreatorList();
         }
 
+        // Función llamada por el botón de inicio
         function initializePlayback() {
             if (!isPlayerReady) return;
 
@@ -375,11 +376,10 @@
             });
         }
 
-        // Cargar el API de YouTube de forma estándar y robusta
         (function() {
             var tag = document.createElement('script');
             tag.src = "https://www.youtube.com";
-            // Usamos document.head.appendChild para garantizar que se inserte correctamente.
+            // Inserción robusta del script en el <head>
             document.head.appendChild(tag);
         })();
 
