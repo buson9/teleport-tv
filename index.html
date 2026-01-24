@@ -139,7 +139,6 @@
         <div class="screen">
             <div id="start-button-overlay">
                 <p id="loading-message">Cargando API de vídeo... espere.</p>
-                <!-- BOTÓN CORREGIDO -->
                 <button id="start-button" onclick="initializePlayback()" style="display:none;"></button>
             </div>
             <div id="player"></div>
@@ -223,7 +222,6 @@
             document.getElementById('page-title').innerText = t.pageTitle;
             document.getElementById('welcome-msg').innerText = t.welcomeMsg;
             document.getElementById('loading-message').innerText = t.loadingApi;
-            // No cambiamos el innerText del startButton aquí porque se hace visible después
             document.getElementById('btn-prev').innerText = t.btnPrev;
             document.getElementById('btn-next').innerText = t.btnNext;
             document.getElementById('btn-play-pause').innerText = t.btnPlayPause;
@@ -255,7 +253,7 @@
             isPlayerReady = true; 
             const lang = navigator.language.includes('es') ? 'es' : 'en';
             document.getElementById('loading-message').innerText = translations[lang].apiReady;
-            document.getElementById('start-button').innerText = translations[lang].startButton; // Establece el texto correcto
+            document.getElementById('start-button').innerText = translations[lang].startButton;
             document.getElementById('start-button').style.display = 'inline-block';
             populateCreatorList();
         }
@@ -308,11 +306,10 @@
             });
         }
 
-        // Cargar el API de YouTube de forma estándar y robusta
+        // CARGA CORRECTA DE LA API DE YOUTUBE
         (function() {
             applyLanguage();
             var tag = document.createElement('script');
-            // CORRECCIÓN DE LA URL:
             tag.src = "https://www.youtube.com"; 
             document.head.appendChild(tag);
         })();
