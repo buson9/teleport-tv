@@ -4,19 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="page-title">World Window TV | TV de Viaje Inmersivo</title>
+    <!-- Fuentes estilo TV retro -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
+    
     <style>
         :root {
-            --color-primary: #FF5733; /* Naranja Caliente (Aventura) */
-            --color-background: #121212;
-            --color-card: #1e1e1e;
+            --color-chassis: #2c3e50; /* Gris azulado oscuro del chasis */
+            --color-screen-border: #1a2a3c;
+            --color-primary: #FF5733; /* Naranja Caliente */
+            --color-accent: #00ff66; /* Verde Neón para la info de canal */
+            --color-background: #0a0a0a;
             --color-text: #e0e0e0;
-            --color-accent: #33CFFF; /* Azul Cielo (Claro) */
         }
         body {
             background: var(--color-background);
             color: var(--color-text);
-            font-family: 'Poppins', sans-serif;
+            font-family: 'VT323', monospace;
             margin: 0;
             display: flex;
             flex-direction: column;
@@ -25,31 +28,36 @@
         }
         header { text-align: center; padding: 20px; width: 100%; }
         h1 {
-            font-family: 'Playfair Display', serif;
+            font-family: 'Orbitron', sans-serif;
             font-size: 3rem;
             color: var(--color-primary);
             margin: 0;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+            text-shadow: 1px 1px 5px rgba(255, 87, 51, 0.4);
         }
-        .subtitle { font-size: 1.1rem; color: var(--color-accent); margin-top: 5px; }
+        .subtitle { font-size: 1.2rem; color: var(--color-accent); margin-top: 5px; }
+
+        /* Estilo del Chasis de la TV */
         .tv-chassis {
             width: 95%;
             max-width: 1000px;
-            background: var(--color-card);
-            border: 8px solid var(--color-primary);
-            border-radius: 15px;
+            background: linear-gradient(145deg, #1e2a38, #3e4a58);
+            border: 15px solid var(--color-chassis);
+            border-radius: 30px;
             position: relative;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
             margin: 20px 0;
+            padding: 10px;
         }
         .screen {
             position: relative;
             padding-bottom: 56.25%; 
             height: 0;
             overflow: hidden;
-            border-radius: 8px;
-            background: #000;
-            margin: 10px;
+            border-radius: 10px;
+            background: var(--color-screen-border);
+            /* Ruido de TV sutil de fondo */
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAADCAYAAABWKkfgAAAAD0lEQVQIW2NkgIL/////HwAYAQhT4yVdAAAAAElFTkSuQmCC');
+            border: 4px solid #111;
         }
         #player {
             position: absolute;
@@ -61,10 +69,12 @@
             opacity: 0; 
             transition: opacity 0.5s;
         }
+
+        /* Superposición del botón de inicio */
         #start-button-overlay {
             z-index: 15;
             cursor: pointer;
-            background: rgba(0, 0, 0, 0.95);
+            background: rgba(0, 0, 0, 0.98);
             width: 100%;
             height: 100%;
             position: absolute;
@@ -72,6 +82,7 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
+            font-family: 'Orbitron', sans-serif;
         }
         #start-button-overlay p { margin: 10px 0; font-size: 1.1rem; }
         #start-button {
@@ -80,25 +91,30 @@
             border: none;
             padding: 15px 40px;
             font-size: 1.4rem;
-            border-radius: 50px;
+            border-radius: 5px;
             cursor: pointer;
             transition: transform 0.3s, background 0.3s;
             box-shadow: 0 5px 15px rgba(255, 87, 51, 0.4);
+            font-family: 'Orbitron', sans-serif;
         }
         #start-button:hover { background: #E64A19; transform: translateY(-3px); }
 
+        /* Info de Canal Retro */
         .channel-info {
             position: absolute;
-            bottom: 20px;
-            left: 20px;
-            background: rgba(0,0,0,0.7);
-            padding: 10px 15px;
-            border-left: 4px solid var(--color-accent);
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.9);
+            padding: 5px 10px;
+            border: 1px solid var(--color-accent);
+            color: var(--color-accent);
             z-index: 12;
-            border-radius: 0 5px 5px 0;
+            font-size: 1.2rem;
+            border-radius: 3px;
         }
         #ch-title { font-weight: 600; font-size: 1rem; }
 
+        /* Controles Remotos */
         .remote-control {
             display: flex;
             justify-content: center;
@@ -108,24 +124,26 @@
             max-width: 700px;
         }
         button {
-            background: var(--color-card);
+            background: #1e2a38;
             color: var(--color-text);
             border: 2px solid var(--color-accent);
             padding: 12px 20px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 1rem;
+            font-family: 'VT323', monospace;
+            font-size: 1.4rem;
             cursor: pointer;
             transition: all 0.2s;
             border-radius: 5px;
             flex-grow: 1;
         }
         button:hover { background: var(--color-accent); color: var(--color-background); box-shadow: 0 0 15px var(--color-accent); }
-        .credits-area { margin-top: 40px; padding: 20px; text-align: center; max-width: 1000px; width: 100%; border-top: 1px solid var(--color-card); }
+        
+        /* Créditos y Donaciones */
+        .credits-area { margin-top: 40px; padding: 20px; text-align: center; max-width: 1000px; width: 100%; border-top: 1px solid var(--color-chassis); }
         .creator-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 20px; }
-        .creator-card { background: var(--color-card); border: 1px solid var(--color-accent); border-radius: 8px; padding: 15px; text-align: left; width: 180px; }
+        .creator-card { background: #1e2a38; border: 1px solid var(--color-accent); border-radius: 8px; padding: 15px; text-align: left; width: 180px; }
         .creator-card a { color: var(--color-accent); text-decoration: none; display: block; margin-top: 5px; }
-        .donation-box { margin-top: 30px; background: var(--color-card); padding: 25px; border: 1px solid var(--color-primary); border-radius: 10px; }
-        .donate-link { background: var(--color-primary); color: white; padding: 12px 30px; font-size: 1.1rem; border-radius: 5px; text-decoration: none; display: inline-block; margin-top: 10px; }
+        .donation-box { margin-top: 30px; background: #1e2a38; padding: 25px; border: 1px solid var(--color-primary); border-radius: 10px; }
+        .donate-link { background: var(--color-primary); color: white; padding: 12px 30px; font-size: 1.4rem; border-radius: 5px; text-decoration: none; display: inline-block; margin-top: 10px; font-family: 'Orbitron', sans-serif; }
     </style>
 </head>
 <body>
@@ -306,7 +324,6 @@
             });
         }
 
-        // CARGA CORRECTA DE LA API DE YOUTUBE
         (function() {
             applyLanguage();
             var tag = document.createElement('script');
