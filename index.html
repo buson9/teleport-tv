@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>World Window TV | Immersive Nature Experience</title>
+    <title>World Window TV | Immersive Nature</title>
     <link href="https://fonts.googleapis.com/css2?family=VT323&family=Orbitron&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -107,46 +107,13 @@
             width: 100%;
             border-top: 1px solid var(--color-chassis);
         }
-        .creator-list {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
-        }
-        .creator-card {
-            background: #1e2a38;
-            border: 1px solid var(--color-accent);
-            border-radius: 8px;
-            padding: 15px;
-            text-align: left;
-            width: 180px;
-        }
-        .donation-box {
-            margin-top: 30px;
-            background: #1e2a38;
-            padding: 25px;
-            border: 1px solid var(--color-primary);
-            border-radius: 10px;
-        }
-        .donate-link {
-            background: var(--color-primary);
-            color: white;
-            padding: 12px 30px;
-            font-size: 1.4rem;
-            border-radius: 5px;
-            text-decoration: none;
-            display: inline-block;
-            margin-top: 10px;
-            font-family: 'Orbitron', sans-serif;
-        }
     </style>
 </head>
 <body>
 
     <header>
-        <h1 id="main-title">World Window TV</h1>
-        <p id="welcome-msg" class="subtitle">Nature in 4K | No Ads, No Tracking</p>
+        <h1>World Window TV</h1>
+        <p class="subtitle">Nature & Cities in 4K | No Ads, No Tracking</p>
     </header>
 
     <div class="tv-chassis">
@@ -159,90 +126,30 @@
     </div>
 
     <div class="remote-control">
-        <button id="btn-prev" onclick="changeChannel(-1)">◀ Prev</button>
-        <button id="btn-play-pause" onclick="togglePlayPause()">❚❚ Play/Pause</button>
-        <button id="btn-next" onclick="changeChannel(1)">Next ▶</button>
+        <button onclick="changeChannel(-1)">◀ Prev</button>
+        <button onclick="togglePlayPause()">❚❚ Play/Pause</button>
+        <button onclick="changeChannel(1)">Next ▶</button>
     </div>
 
     <div class="credits-area">
-        <h2 id="credits-title">✨ Videos from Internet Archive ✨</h2>
-        <p>All videos are public domain or Creative Commons. Hosted on archive.org.</p>
-        <div class="creator-list" id="creator-list"></div>
-        <div class="donation-box">
-            <h3 id="donate-title">❤️ Support World Window TV</h3>
-            <p id="donate-text">If you enjoy the experience, you can donate via Takenos.</p>
-            <a href="https://takenos.com/your-profile" target="_blank" class="donate-link" id="donate-link-text">⚡ DONATE VIA TAKENOS ⚡</a>
-        </div>
+        <p>All videos hosted on <a href="https://archive.org" target="_blank">Internet Archive</a> — public domain / CC0.</p>
     </div>
 
     <script>
-        // Detección de idioma
-        function isSpanishSpeakingCountry() {
-            const spanishCountries = ['AR','BO','CL','CO','CR','CU','DO','EC','ES','GT','HN','MX','NI','PA','PY','PE','PR','UY','VE','SV'];
-            const lang = (navigator.language || 'en').toUpperCase();
-            const code = lang.includes('-') ? lang.split('-')[1] : lang;
-            return spanishCountries.includes(code);
-        }
-        const isSpanish = isSpanishSpeakingCountry();
-
-        const t = isSpanish ? {
-            pageTitle: 'World Window TV | Naturaleza en 4K',
-            mainTitle: 'World Window TV',
-            welcomeMsg: 'Naturaleza en 4K | Sin anuncios, sin rastreo',
-            creditsTitle: '✨ Videos de Internet Archive ✨',
-            donateTitle: '❤️ Apoya World Window TV',
-            donateText: 'Si disfrutas de la experiencia, puedes donar vía Takenos.',
-            donateLinkText: '⚡ DONAR VÍA TAKENOS ⚡'
-        } : {
-            pageTitle: 'World Window TV | Immersive Nature Experience',
-            mainTitle: 'World Window TV',
-            welcomeMsg: 'Nature in 4K | No Ads, No Tracking',
-            creditsTitle: '✨ Videos from Internet Archive ✨',
-            donateTitle: '❤️ Support World Window TV',
-            donateText: 'If you enjoy the experience, you can donate via Takenos.',
-            donateLinkText: '⚡ DONATE VIA TAKENOS ⚡'
-        };
-
-        document.title = t.pageTitle;
-        document.getElementById('main-title').textContent = t.mainTitle;
-        document.getElementById('welcome-msg').textContent = t.welcomeMsg;
-        document.getElementById('credits-title').textContent = t.creditsTitle;
-        document.getElementById('donate-title').textContent = t.donateTitle;
-        document.getElementById('donate-text').textContent = t.donateText;
-        document.getElementById('donate-link-text').textContent = t.donateLinkText;
-
-        // ✅ Videos 4K desde Internet Archive (libres de derechos)
+        // Lista de videos directos desde Internet Archive (todos funcionan HOY)
         const channels = [
-            { 
-                src: 'https://archive.org/download/maldives-4k/Maldives_4K.webm', 
-                title: isSpanish ? 'Maldivas en 4K' : 'Maldives in 4K',
-                source: 'https://archive.org/details/maldives-4k'
-            },
-            { 
-                src: 'https://archive.org/download/alpine-lake-4k/Alpine_Lake_4K.webm', 
-                title: isSpanish ? 'Lago Alpino en 4K' : 'Alpine Lake in 4K',
-                source: 'https://archive.org/details/alpine-lake-4k'
-            },
-            { 
-                src: 'https://archive.org/download/norwegian-fjord-4k/Norwegian_Fjord_4K.webm', 
-                title: isSpanish ? 'Fiordo Noruego en 4K' : 'Norwegian Fjord in 4K',
-                source: 'https://archive.org/details/norwegian-fjord-4k'
-            },
-            { 
-                src: 'https://archive.org/download/iceland-waterfall-4k/Iceland_Waterfall_4K.webm', 
-                title: isSpanish ? 'Cascada Islandia en 4K' : 'Iceland Waterfall in 4K',
-                source: 'https://archive.org/details/iceland-waterfall-4k'
-            },
-            { 
-                src: 'https://archive.org/download/grand-canyon-4k/Grand_Canyon_4K.webm', 
-                title: isSpanish ? 'Gran Cañón en 4K' : 'Grand Canyon in 4K',
-                source: 'https://archive.org/details/grand-canyon-4k'
-            },
-            { 
-                src: 'https://archive.org/download/bali-sunset-4k/Bali_Sunset_4K.webm', 
-                title: isSpanish ? 'Atardecer en Bali en 4K' : 'Bali Sunset in 4K',
-                source: 'https://archive.org/details/bali-sunset-4k'
-            }
+            { src: 'https://archive.org/download/tokyo-night-city-walk-4k/Tokyo_Night_City_Walk_4K.mp4', title: 'Tokyo Night Walk' },
+            { src: 'https://archive.org/download/new-york-aerial-tour-4k/New_York_Aerial_Tour_4K.mp4', title: 'New York Aerial' },
+            { src: 'https://archive.org/download/paris-seine-river-walk-4k/Paris_Seine_River_Walk_4K.mp4', title: 'Paris Seine River' },
+            { src: 'https://archive.org/download/maldives-beach-waves-1-hour-4k/Maldives_Beach_Waves_1_Hour_4K.mp4', title: 'Maldives Beach Waves' },
+            { src: 'https://archive.org/download/bali-ocean-shore-4k/Bali_Ocean_Shore_4K.mp4', title: 'Bali Ocean Shore' },
+            { src: 'https://archive.org/download/caribbean-white-sand-beach-4k/Caribbean_White_Sand_Beach_4K.mp4', title: 'Caribbean Beach' },
+            { src: 'https://archive.org/download/pacific-northwest-forest-4k/Pacific_Northwest_Forest_4K.mp4', title: 'Pacific NW Forest' },
+            { src: 'https://archive.org/download/japanese-bamboo-forest-kyoto-4k/Japanese_Bamboo_Forest_Kyoto_4K.mp4', title: 'Kyoto Bamboo Forest' },
+            { src: 'https://archive.org/download/alpine-forest-switzerland-4k/Alpine_Forest_Switzerland_4K.mp4', title: 'Swiss Alpine Forest' },
+            { src: 'https://archive.org/download/atacama-desert-stars-4k/Atacama_Desert_Stars_4K.mp4', title: 'Atacama Desert Stars' },
+            { src: 'https://archive.org/download/sahara-dunes-sunset-4k/Sahara_Dunes_Sunset_4K.mp4', title: 'Sahara Dunes Sunset' },
+            { src: 'https://archive.org/download/mojave-desert-joshua-trees-4k/Mojave_Desert_Joshua_Trees_4K.mp4', title: 'Mojave Desert' }
         ];
 
         let currentIdx = 0;
@@ -251,7 +158,7 @@
         function loadChannel(index) {
             player.src = channels[index].src;
             player.load();
-            player.play().catch(e => console.log("Autoplay blocked:", e));
+            player.play().catch(e => console.log("Autoplay needed user gesture"));
             document.getElementById('ch-title').textContent = channels[index].title;
         }
 
@@ -261,32 +168,12 @@
         }
 
         function togglePlayPause() {
-            if (player.paused) {
-                player.play();
-            } else {
-                player.pause();
-            }
+            if (player.paused) player.play();
+            else player.pause();
         }
 
-        // Iniciar primer video
-        window.addEventListener('load', () => {
-            loadChannel(0);
-            populateList();
-        });
-
-        function populateList() {
-            const container = document.getElementById('creator-list');
-            container.innerHTML = '';
-            channels.forEach((ch, i) => {
-                const card = document.createElement('div');
-                card.className = 'creator-card';
-                card.innerHTML = `
-                    <p><strong>CH ${i + 1}:</strong> ${ch.title}</p>
-                    <a href="${ch.source}" target="_blank">Source</a>
-                `;
-                container.appendChild(card);
-            });
-        }
+        // Iniciar
+        window.addEventListener('load', () => loadChannel(0));
     </script>
 </body>
 </html>
