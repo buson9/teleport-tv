@@ -1,32 +1,290 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Prueba Final</title>
-    <script src="https://www.youtube.com/iframe_api"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>World Window TV | Immersive Nature Experience</title>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Orbitron&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-chassis: #2c3e50;
+            --color-screen-border: #1a2a3c;
+            --color-primary: #FF5733;
+            --color-accent: #00ff66;
+            --color-background: #0a0a0a;
+            --color-text: #e0e0e0;
+        }
+        body {
+            background: var(--color-background);
+            color: var(--color-text);
+            font-family: 'VT323', monospace;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-bottom: 40px;
+        }
+        header { text-align: center; padding: 20px; width: 100%; }
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            color: var(--color-primary);
+            margin: 0;
+            text-shadow: 1px 1px 5px rgba(255, 87, 51, 0.4);
+        }
+        .subtitle { font-size: 1.2rem; color: var(--color-accent); margin-top: 5px; }
+
+        .tv-chassis {
+            width: 95%;
+            max-width: 1000px;
+            background: linear-gradient(145deg, #1e2a38, #3e4a58);
+            border: 15px solid var(--color-chassis);
+            border-radius: 30px;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+            margin: 20px 0;
+            padding: 10px;
+        }
+        .screen {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 10px;
+            background: var(--color-screen-border);
+            border: 4px solid #111;
+        }
+        #player {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: #000;
+        }
+
+        .channel-info {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.9);
+            padding: 5px 10px;
+            border: 1px solid var(--color-accent);
+            color: var(--color-accent);
+            z-index: 12;
+            font-size: 1.2rem;
+            border-radius: 3px;
+        }
+
+        .remote-control {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            width: 100%;
+            max-width: 700px;
+        }
+        button {
+            background: #1e2a38;
+            color: var(--color-text);
+            border: 2px solid var(--color-accent);
+            padding: 12px 20px;
+            font-family: 'VT323', monospace;
+            font-size: 1.4rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 5px;
+            flex-grow: 1;
+        }
+        button:hover { background: var(--color-accent); color: var(--color-background); box-shadow: 0 0 15px var(--color-accent); }
+
+        .credits-area {
+            margin-top: 40px;
+            padding: 20px;
+            text-align: center;
+            max-width: 1000px;
+            width: 100%;
+            border-top: 1px solid var(--color-chassis);
+        }
+        .creator-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .creator-card {
+            background: #1e2a38;
+            border: 1px solid var(--color-accent);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: left;
+            width: 180px;
+        }
+        .donation-box {
+            margin-top: 30px;
+            background: #1e2a38;
+            padding: 25px;
+            border: 1px solid var(--color-primary);
+            border-radius: 10px;
+        }
+        .donate-link {
+            background: var(--color-primary);
+            color: white;
+            padding: 12px 30px;
+            font-size: 1.4rem;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 10px;
+            font-family: 'Orbitron', sans-serif;
+        }
+    </style>
 </head>
-<body style="background:#000; color:#0f0; padding:20px;">
-    <h2>Prueba: African Waterhole</h2>
-    <div id="player"></div>
+<body>
+
+    <header>
+        <h1 id="main-title">World Window TV</h1>
+        <p id="welcome-msg" class="subtitle">Nature in 4K | No Ads, No Tracking</p>
+    </header>
+
+    <div class="tv-chassis">
+        <div class="screen">
+            <video id="player" autoplay muted loop playsinline></video>
+            <div class="channel-info">
+                <div id="ch-title">Loading...</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="remote-control">
+        <button id="btn-prev" onclick="changeChannel(-1)">◀ Prev</button>
+        <button id="btn-play-pause" onclick="togglePlayPause()">❚❚ Play/Pause</button>
+        <button id="btn-next" onclick="changeChannel(1)">Next ▶</button>
+    </div>
+
+    <div class="credits-area">
+        <h2 id="credits-title">✨ Videos from Internet Archive ✨</h2>
+        <p>All videos are public domain or Creative Commons. Hosted on archive.org.</p>
+        <div class="creator-list" id="creator-list"></div>
+        <div class="donation-box">
+            <h3 id="donate-title">❤️ Support World Window TV</h3>
+            <p id="donate-text">If you enjoy the experience, you can donate via Takenos.</p>
+            <a href="https://takenos.com/your-profile" target="_blank" class="donate-link" id="donate-link-text">⚡ DONATE VIA TAKENOS ⚡</a>
+        </div>
+    </div>
 
     <script>
-        let player;
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('player', {
-                width: '640',
-                height: '360',
-                videoId: 'jrbG8y5pF6A',
-                playerVars: {
-                    autoplay: 1,
-                    mute: 1,          // ← obligatorio
-                    controls: 1,
-                    modestbranding: 1,
-                    rel: 0
-                },
-                events: {
-                    onReady: (e) => e.target.playVideo(),
-                    onError: (e) => console.error("Error:", e.data)
-                }
+        // Detección de idioma
+        function isSpanishSpeakingCountry() {
+            const spanishCountries = ['AR','BO','CL','CO','CR','CU','DO','EC','ES','GT','HN','MX','NI','PA','PY','PE','PR','UY','VE','SV'];
+            const lang = (navigator.language || 'en').toUpperCase();
+            const code = lang.includes('-') ? lang.split('-')[1] : lang;
+            return spanishCountries.includes(code);
+        }
+        const isSpanish = isSpanishSpeakingCountry();
+
+        const t = isSpanish ? {
+            pageTitle: 'World Window TV | Naturaleza en 4K',
+            mainTitle: 'World Window TV',
+            welcomeMsg: 'Naturaleza en 4K | Sin anuncios, sin rastreo',
+            creditsTitle: '✨ Videos de Internet Archive ✨',
+            donateTitle: '❤️ Apoya World Window TV',
+            donateText: 'Si disfrutas de la experiencia, puedes donar vía Takenos.',
+            donateLinkText: '⚡ DONAR VÍA TAKENOS ⚡'
+        } : {
+            pageTitle: 'World Window TV | Immersive Nature Experience',
+            mainTitle: 'World Window TV',
+            welcomeMsg: 'Nature in 4K | No Ads, No Tracking',
+            creditsTitle: '✨ Videos from Internet Archive ✨',
+            donateTitle: '❤️ Support World Window TV',
+            donateText: 'If you enjoy the experience, you can donate via Takenos.',
+            donateLinkText: '⚡ DONATE VIA TAKENOS ⚡'
+        };
+
+        document.title = t.pageTitle;
+        document.getElementById('main-title').textContent = t.mainTitle;
+        document.getElementById('welcome-msg').textContent = t.welcomeMsg;
+        document.getElementById('credits-title').textContent = t.creditsTitle;
+        document.getElementById('donate-title').textContent = t.donateTitle;
+        document.getElementById('donate-text').textContent = t.donateText;
+        document.getElementById('donate-link-text').textContent = t.donateLinkText;
+
+        // ✅ Videos 4K desde Internet Archive (libres de derechos)
+        const channels = [
+            { 
+                src: 'https://archive.org/download/maldives-4k/Maldives_4K.webm', 
+                title: isSpanish ? 'Maldivas en 4K' : 'Maldives in 4K',
+                source: 'https://archive.org/details/maldives-4k'
+            },
+            { 
+                src: 'https://archive.org/download/alpine-lake-4k/Alpine_Lake_4K.webm', 
+                title: isSpanish ? 'Lago Alpino en 4K' : 'Alpine Lake in 4K',
+                source: 'https://archive.org/details/alpine-lake-4k'
+            },
+            { 
+                src: 'https://archive.org/download/norwegian-fjord-4k/Norwegian_Fjord_4K.webm', 
+                title: isSpanish ? 'Fiordo Noruego en 4K' : 'Norwegian Fjord in 4K',
+                source: 'https://archive.org/details/norwegian-fjord-4k'
+            },
+            { 
+                src: 'https://archive.org/download/iceland-waterfall-4k/Iceland_Waterfall_4K.webm', 
+                title: isSpanish ? 'Cascada Islandia en 4K' : 'Iceland Waterfall in 4K',
+                source: 'https://archive.org/details/iceland-waterfall-4k'
+            },
+            { 
+                src: 'https://archive.org/download/grand-canyon-4k/Grand_Canyon_4K.webm', 
+                title: isSpanish ? 'Gran Cañón en 4K' : 'Grand Canyon in 4K',
+                source: 'https://archive.org/details/grand-canyon-4k'
+            },
+            { 
+                src: 'https://archive.org/download/bali-sunset-4k/Bali_Sunset_4K.webm', 
+                title: isSpanish ? 'Atardecer en Bali en 4K' : 'Bali Sunset in 4K',
+                source: 'https://archive.org/details/bali-sunset-4k'
+            }
+        ];
+
+        let currentIdx = 0;
+        const player = document.getElementById('player');
+
+        function loadChannel(index) {
+            player.src = channels[index].src;
+            player.load();
+            player.play().catch(e => console.log("Autoplay blocked:", e));
+            document.getElementById('ch-title').textContent = channels[index].title;
+        }
+
+        function changeChannel(dir) {
+            currentIdx = (currentIdx + dir + channels.length) % channels.length;
+            loadChannel(currentIdx);
+        }
+
+        function togglePlayPause() {
+            if (player.paused) {
+                player.play();
+            } else {
+                player.pause();
+            }
+        }
+
+        // Iniciar primer video
+        window.addEventListener('load', () => {
+            loadChannel(0);
+            populateList();
+        });
+
+        function populateList() {
+            const container = document.getElementById('creator-list');
+            container.innerHTML = '';
+            channels.forEach((ch, i) => {
+                const card = document.createElement('div');
+                card.className = 'creator-card';
+                card.innerHTML = `
+                    <p><strong>CH ${i + 1}:</strong> ${ch.title}</p>
+                    <a href="${ch.source}" target="_blank">Source</a>
+                `;
+                container.appendChild(card);
             });
         }
     </script>
