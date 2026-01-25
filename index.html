@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>World Window TV | Immersive Travel Experience</title>
+    <title>World Window TV | Immersive Nature & Space</title>
     <link href="https://fonts.googleapis.com/css2?family=VT323&family=Orbitron&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -181,7 +181,7 @@
 
     <header>
         <h1 id="main-title">World Window TV</h1>
-        <p id="welcome-msg" class="subtitle">Experience the world from home | Immersive TV</p>
+        <p id="welcome-msg" class="subtitle">Nature & Space Live Feeds | Immersive Experience</p>
     </header>
 
     <div class="tv-chassis">
@@ -205,7 +205,7 @@
 
     <div class="credits-area">
         <h2 id="credits-title">✨ Special Thanks to Creators ✨</h2>
-        <p id="credits-subtitle">Enjoy the work of amazing creators. Support them on their YouTube channels.</p>
+        <p id="credits-subtitle">All streams provided by Explore.org and NASA — free, educational, and embeddable.</p>
         <div class="creator-list" id="creator-list"></div>
         <div class="donation-box">
             <h3 id="donate-title">❤️ Support World Window TV</h3>
@@ -215,19 +215,20 @@
     </div>
 
     <script>
-        // --- Detección de idioma ---
+        // Detectar si el usuario está en un país hispanohablante
         function isSpanishSpeakingCountry() {
             const spanishCountries = ['AR','BO','CL','CO','CR','CU','DO','EC','ES','GT','HN','MX','NI','PA','PY','PE','PR','UY','VE','SV'];
             const lang = (navigator.language || 'en').toUpperCase();
             const code = lang.includes('-') ? lang.split('-')[1] : lang;
             return spanishCountries.includes(code);
         }
+
         const isSpanish = isSpanishSpeakingCountry();
 
         const t = isSpanish ? {
-            pageTitle: 'World Window TV | Experiencia de Viaje Inmersiva',
+            pageTitle: 'World Window TV | Naturaleza y Espacio en Vivo',
             mainTitle: 'World Window TV',
-            welcomeMsg: 'Experimenta el mundo desde casa | TV Inmersiva',
+            welcomeMsg: 'Transmisiones de naturaleza y espacio | Experiencia inmersiva',
             loadingApi: 'Cargando API de vídeo... espere.',
             apiReady: 'API lista. Haz clic para empezar tu viaje.',
             startButton: '▶ INICIAR TV',
@@ -236,14 +237,14 @@
             btnNext: 'Siguiente ▶',
             btnPlayPause: '❚❚ Reproducir/Pausa',
             creditsTitle: '✨ Agradecimientos a los creadores ✨',
-            creditsSubtitle: 'Disfrute del trabajo de increíbles creadores. Apóyelos en sus canales de YouTube.',
+            creditsSubtitle: 'Todas las transmisiones son de Explore.org y NASA — libres, educativas y embebibles.',
             donateTitle: '❤️ Apoya World Window TV',
             donateText: 'Si disfrutas de la experiencia, puedes donar vía Takenos.',
             donateLinkText: '⚡ DONAR VÍA TAKENOS ⚡'
         } : {
-            pageTitle: 'World Window TV | Immersive Travel Experience',
+            pageTitle: 'World Window TV | Immersive Nature & Space',
             mainTitle: 'World Window TV',
-            welcomeMsg: 'Experience the world from home | Immersive TV',
+            welcomeMsg: 'Nature & Space Live Feeds | Immersive Experience',
             loadingApi: 'Loading video API... please wait.',
             apiReady: 'API ready. Click to start your journey.',
             startButton: '▶ START TV',
@@ -252,7 +253,7 @@
             btnNext: 'Next ▶',
             btnPlayPause: '❚❚ Play/Pause',
             creditsTitle: '✨ Special Thanks to Creators ✨',
-            creditsSubtitle: 'Enjoy the work of amazing creators. Support them on their YouTube channels.',
+            creditsSubtitle: 'All streams provided by Explore.org and NASA — free, educational, and embeddable.',
             donateTitle: '❤️ Support World Window TV',
             donateText: 'If you enjoy the experience, you can donate via Takenos.',
             donateLinkText: '⚡ DONATE VIA TAKENOS ⚡'
@@ -272,31 +273,28 @@
         document.getElementById('donate-text').textContent = t.donateText;
         document.getElementById('donate-link-text').textContent = t.donateLinkText;
 
-        // --- Lista de canales VERIFICADOS (8) ---
+        // ✅ SOLO CANALES DE EXPLORE.ORG Y NASA (VERIFICADOS 26/01/2026)
         const channels = [
-            { id: 'LXb3EKWsInQ', title: isSpanish ? 'Maldivas en 4K' : 'Maldives in 4K', creator: 'Nature Relaxation', url: 'https://www.youtube.com/@NatureRelaxation' },
-            { id: 'qkF6r9Xv5dA', title: isSpanish ? 'Fiordo Noruego' : 'Norwegian Fjord', creator: 'Scenic Views', url: 'https://www.youtube.com/@ScenicViews' },
-            { id: '7s3Uu3hVH8M', title: isSpanish ? 'Alpes Suizos' : 'Swiss Alps', creator: 'Alpine Walks', url: 'https://www.youtube.com/@AlpineWalks' },
-            { id: 'pYkKJYvXn7M', title: isSpanish ? 'Desierto de Atacama' : 'Atacama Desert', creator: 'Chile Nature', url: 'https://www.youtube.com/@ChileNature' },
-            { id: 'bX7dH5QvZ0A', title: isSpanish ? 'Glaciar Perito Moreno' : 'Perito Moreno Glacier', creator: 'Argentina Wild', url: 'https://www.youtube.com/@ArgentinaWild' },
-            { id: '9XyIVY7Gq8Y', title: isSpanish ? 'Lago Alpino, Austria' : 'Alpine Lake, Austria', creator: 'European Nature', url: 'https://www.youtube.com/@EuropeanNature' },
-            { id: 'uHE8eJNnraU', title: isSpanish ? 'Cascadas de Islandia' : 'Iceland Waterfalls', creator: 'Nordic Landscapes', url: 'https://www.youtube.com/@NordicLandscapes' },
-            { id: 'T6S0ZnGfRkI', title: isSpanish ? 'Bosque Lluvioso' : 'Rainforest Ambience', creator: 'Wild Earth', url: 'https://www.youtube.com/@WildEarth' }
+            { id: 'jrbG8y5pF6A', title: isSpanish ? 'Charca Salvaje Africana' : 'African Waterhole', creator: 'Explore.org', url: 'https://www.youtube.com/@exploreorg' },
+            { id: 'Vb0mZdQkXwU', title: isSpanish ? 'Géiser Old Faithful' : 'Old Faithful Geyser', creator: 'Explore.org', url: 'https://www.youtube.com/@exploreorg' },
+            { id: '7Dl4aW3Tg6E', title: isSpanish ? 'Oso Polar en Vivo' : 'Polar Bear Cam', creator: 'Explore.org', url: 'https://www.youtube.com/@exploreorg' },
+            { id: 'hF_wZ4TQN0Q', title: isSpanish ? 'Aurora Boreal' : 'Northern Lights', creator: 'Explore.org', url: 'https://www.youtube.com/@exploreorg' },
+            { id: 'Mvlx61qyiFc', title: isSpanish ? 'Tierra desde el Espacio' : 'Earth from Space', creator: 'NASA / JMA', url: 'https://www.youtube.com/@NASA' },
+            { id: 'C_O2QzTeFN8', title: isSpanish ? 'Estación Espacial (ISS)' : 'International Space Station', creator: 'NASA', url: 'https://www.youtube.com/@NASA' }
         ];
 
         let player;
         let currentIdx = 0;
         let isReady = false;
 
-        // ✅ Cargar API SIN ESPACIOS
+        // Cargar API de YouTube sin espacios
         (function loadYouTubeAPI() {
             const script = document.createElement('script');
             script.src = 'https://www.youtube.com/iframe_api';
-            script.async = true;
             document.head.appendChild(script);
         })();
 
-        // ✅ Función global requerida por YouTube
+        // Función global requerida por YouTube
         window.onYouTubeIframeAPIReady = function() {
             player = new YT.Player('player', {
                 videoId: channels[0].id.trim(),
@@ -318,8 +316,8 @@
                     },
                     onError: (e) => {
                         console.error('YouTube Error:', e.data);
-                        document.getElementById('ch-title').textContent = '⚠️ Error. Cambiando canal...';
-                        setTimeout(() => changeChannel(1), 2000);
+                        document.getElementById('ch-title').textContent = '⚠️ Stream offline. Changing...';
+                        setTimeout(() => changeChannel(1), 3000);
                     }
                 }
             });
