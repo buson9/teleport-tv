@@ -2,51 +2,76 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Paisajes Relax - Sin Distracciones</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teleport TV - Paisajes</title>
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #000; }
-        #player { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
-        .controles { position: fixed; bottom: 20px; right: 20px; z-index: 100; }
-        button { padding: 10px; cursor: pointer; background: rgba(255,255,255,0.2); color: white; border: none; border-radius: 5px; }
+        body, html { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; background: #000; }
+        #player { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        .controles { position: fixed; bottom: 20px; left: 20px; z-index: 100; display: flex; gap: 10px; }
+        button { padding: 12px 20px; cursor: pointer; background: rgba(0,0,0,0.6); color: white; border: 1px solid white; border-radius: 5px; font-family: sans-serif; }
+        button:hover { background: rgba(255,255,255,0.2); }
     </style>
 </head>
 <body>
 
-    <!-- Contenedor del video -->
     <div id="player"></div>
 
     <div class="controles">
-        <button onclick="player.unMute();">Activar Sonido 🔊</button>
-        <button onclick="player.nextVideo();">Siguiente Paisaje ➔</button>
+        <button id="btnMute" onclick="toggleMute()">Activar Sonido 🔊</button>
+        <button onclick="nextVideo()">Siguiente Paisaje ➔</button>
     </div>
 
     <script>
+        // 1. Cargamos la API de forma asíncrona pero segura
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com";
         var firstScriptTag = document.getElementsByTagName('script')[0];
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
         var player;
-        // Lista de IDs de videos de paisajes relajantes (puedes cambiarlos)
         var paisajesIDs = ['668n7W6F9pY', '1ZyH8fS6M_A', 'mXz6T8K8U1E', '3S7Lp-y9R8M'];
 
+        // 2. Esta función la llama YouTube automáticamente cuando carga
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
-                host: 'https://www.youtube-nocookie.com', // TRUCO: Menos anuncios
                 height: '100%',
                 width: '100%',
+                videoId: paisajesIDs[0],
                 playerVars: {
                     'autoplay': 1,
-                    'controls': 0,      // Oculta botones de YouTube
-                    'modestbranding': 1, // Quita el logo grande
-                    'rel': 0,           // No muestra videos relacionados al final
-                    'mute': 1,          // Autoplay requiere silencio inicial
-                    'playlist': paisajesIDs.join(',')
+                    'controls': 0,
+                    'mute': 1,
+                    'modestbranding': 1,
+                    'loop': 1,
+                    'playlist': paisajesIDs.join(',') // Para que funcione el loop
                 },
                 events: {
-                    'onReady': (event) => event.target.playVideo()
+                    'onReady': onPlayerReady
                 }
             });
+        }
+
+        function onPlayerReady(event) {
+            event.target.playVideo();
+        }
+
+        // 3. Funciones de control con protección (evitan el error de "undefined")
+        function toggleMute() {
+            if (player && typeof player.isMuted === "function") {
+                if (player.isMuted()) {
+                    player.unMute();
+                    document.getElementById('btnMute').innerText = "Silenciar 🔇";
+                } else {
+                    player.mute();
+                    document.getElementById('btnMute').innerText = "Activar Sonido 🔊";
+                }
+            }
+        }
+
+        function nextVideo() {
+            if (player && typeof player.nextVideo === "function") {
+                player.nextVideo();
+            }
         }
     </script>
 </body>
