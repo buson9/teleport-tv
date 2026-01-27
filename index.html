@@ -1,288 +1,52 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>World Window TV | Immersive Travel</title>
-    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Orbitron&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Paisajes Relax - Sin Distracciones</title>
     <style>
-        :root {
-            --color-chassis: #2c3e50;
-            --color-screen-border: #1a2a3c;
-            --color-primary: #FF5733;
-            --color-accent: #00ff66;
-            --color-background: #0a0a0a;
-            --color-text: #e0e0e0;
-        }
-        body {
-            background: var(--color-background);
-            color: var(--color-text);
-            font-family: 'VT323', monospace;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-bottom: 40px;
-        }
-        header { text-align: center; padding: 20px; width: 100%; }
-        h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 3rem;
-            color: var(--color-primary);
-            margin: 0;
-            text-shadow: 1px 1px 5px rgba(255, 87, 51, 0.4);
-        }
-        .subtitle { font-size: 1.2rem; color: var(--color-accent); margin-top: 5px; }
-
-        .tv-chassis {
-            width: 95%;
-            max-width: 1000px;
-            background: linear-gradient(145deg, #1e2a38, #3e4a58);
-            border: 15px solid var(--color-chassis);
-            border-radius: 30px;
-            position: relative;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
-            margin: 20px 0;
-            padding: 10px;
-        }
-        .screen {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-            overflow: hidden;
-            border-radius: 10px;
-            background: var(--color-screen-border);
-            border: 4px solid #111;
-        }
-        #player {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-            opacity: 0;
-            transition: opacity 0.5s;
-        }
-
-        #start-button-overlay {
-            z-index: 15;
-            cursor: pointer;
-            background: rgba(0, 0, 0, 0.98);
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            font-family: 'Orbitron', sans-serif;
-        }
-        #start-button-overlay p { margin: 10px 0; font-size: 1.1rem; }
-        #start-button {
-            background: var(--color-primary);
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            font-size: 1.4rem;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: transform 0.3s, background 0.3s;
-            box-shadow: 0 5px 15px rgba(255, 87, 51, 0.4);
-            font-family: 'Orbitron', sans-serif;
-        }
-        #start-button:hover { background: #E64A19; transform: translateY(-3px); }
-
-        .channel-info {
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-            background: rgba(0,0,0,0.9);
-            padding: 5px 10px;
-            border: 1px solid var(--color-accent);
-            color: var(--color-accent);
-            z-index: 12;
-            font-size: 1.2rem;
-            border-radius: 3px;
-        }
-
-        .remote-control {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 30px;
-            width: 100%;
-            max-width: 700px;
-        }
-        button {
-            background: #1e2a38;
-            color: var(--color-text);
-            border: 2px solid var(--color-accent);
-            padding: 12px 20px;
-            font-family: 'VT323', monospace;
-            font-size: 1.4rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            border-radius: 5px;
-            flex-grow: 1;
-        }
-        button:hover { background: var(--color-accent); color: var(--color-background); box-shadow: 0 0 15px var(--color-accent); }
-
-        .credits-area {
-            margin-top: 40px;
-            padding: 20px;
-            text-align: center;
-            max-width: 1000px;
-            width: 100%;
-            border-top: 1px solid var(--color-chassis);
-        }
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #000; }
+        #player { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        .controles { position: fixed; bottom: 20px; right: 20px; z-index: 100; }
+        button { padding: 10px; cursor: pointer; background: rgba(255,255,255,0.2); color: white; border: none; border-radius: 5px; }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1 id="main-title">World Window TV</h1>
-        <p id="welcome-msg" class="subtitle">Experience the world from home | Immersive TV</p>
-    </header>
+    <!-- Contenedor del video -->
+    <div id="player"></div>
 
-    <div class="tv-chassis">
-        <div class="screen">
-            <div id="start-button-overlay">
-                <p id="loading-message">Loading video API... please wait.</p>
-                <button id="start-button" onclick="initializePlayback()" style="display:none;">▶ START TV</button>
-            </div>
-            <div id="player"></div>
-            <div class="channel-info">
-                <div id="ch-title">Select a channel</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="remote-control">
-        <button id="btn-prev" onclick="changeChannel(-1)">◀ Prev</button>
-        <button id="btn-play-pause" onclick="togglePlayPause()">❚❚ Play/Pause</button>
-        <button id="btn-next" onclick="changeChannel(1)">Next ▶</button>
-    </div>
-
-    <div class="credits-area">
-        <p>All videos are public and embeddable from YouTube.</p>
+    <div class="controles">
+        <button onclick="player.unMute();">Activar Sonido 🔊</button>
+        <button onclick="player.nextVideo();">Siguiente Paisaje ➔</button>
     </div>
 
     <script>
-        // Detectar español
-        function isSpanishSpeakingCountry() {
-            const spanishCountries = ['AR','BO','CL','CO','CR','CU','DO','EC','ES','GT','HN','MX','NI','PA','PY','PE','PR','UY','VE','SV'];
-            const lang = (navigator.language || 'en').toUpperCase();
-            const code = lang.includes('-') ? lang.split('-')[1] : lang;
-            return spanishCountries.includes(code);
-        }
-        const isSpanish = isSpanishSpeakingCountry();
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-        const t = isSpanish ? {
-            pageTitle: 'World Window TV | Experiencia de Viaje',
-            mainTitle: 'World Window TV',
-            welcomeMsg: 'Experimenta el mundo desde casa | TV Inmersiva',
-            loadingApi: 'Cargando API de vídeo... espere.',
-            apiReady: 'API lista. Haz clic para empezar.',
-            startButton: '▶ INICIAR TV',
-            selectChannel: 'Selecciona un canal',
-            btnPrev: '◀ Anterior',
-            btnNext: 'Siguiente ▶',
-            btnPlayPause: '❚❚ Reproducir/Pausa'
-        } : {
-            pageTitle: 'World Window TV | Immersive Travel',
-            mainTitle: 'World Window TV',
-            welcomeMsg: 'Experience the world from home | Immersive TV',
-            loadingApi: 'Loading video API... please wait.',
-            apiReady: 'API ready. Click to start.',
-            startButton: '▶ START TV',
-            selectChannel: 'Select a channel',
-            btnPrev: '◀ Prev',
-            btnNext: 'Next ▶',
-            btnPlayPause: '❚❚ Play/Pause'
-        };
+        var player;
+        // Lista de IDs de videos de paisajes relajantes (puedes cambiarlos)
+        var paisajesIDs = ['668n7W6F9pY', '1ZyH8fS6M_A', 'mXz6T8K8U1E', '3S7Lp-y9R8M'];
 
-        document.title = t.pageTitle;
-        document.getElementById('main-title').textContent = t.mainTitle;
-        document.getElementById('welcome-msg').textContent = t.welcomeMsg;
-        document.getElementById('loading-message').textContent = t.loadingApi;
-        document.getElementById('ch-title').textContent = t.selectChannel;
-        document.getElementById('btn-prev').textContent = t.btnPrev;
-        document.getElementById('btn-next').textContent = t.btnNext;
-        document.getElementById('btn-play-pause').textContent = t.btnPlayPause;
-
-        // ✅ SOLO CANALES QUE FUNCIONAN HOY (28/01/2026)
-        const channels = [
-            { id: 'LXb3EKWsInQ', title: isSpanish ? 'Maldivas en 4K' : 'Maldives in 4K' },
-            { id: 'pYkKJYvXn7M', title: isSpanish ? 'Desierto de Atacama' : 'Atacama Desert' },
-            { id: 'bX7dH5QvZ0A', title: isSpanish ? 'Glaciar Perito Moreno' : 'Perito Moreno Glacier' }
-        ];
-
-        let player;
-        let currentIdx = 0;
-        let isReady = false;
-
-        // Cargar API de YouTube
-        (function() {
-            const script = document.createElement('script');
-            script.src = 'https://www.youtube.com/iframe_api';
-            document.head.appendChild(script);
-        })();
-
-        // Función global requerida por YouTube
-        window.onYouTubeIframeAPIReady = function() {
+        function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
-                videoId: channels[0].id,
+                host: 'https://www.youtube-nocookie.com', // TRUCO: Menos anuncios
+                height: '100%',
+                width: '100%',
                 playerVars: {
-                    autoplay: 0,
-                    controls: 1,
-                    modestbranding: 1,
-                    rel: 0,
-                    mute: 1  // ← clave para evitar bloqueo
+                    'autoplay': 1,
+                    'controls': 0,      // Oculta botones de YouTube
+                    'modestbranding': 1, // Quita el logo grande
+                    'rel': 0,           // No muestra videos relacionados al final
+                    'mute': 1,          // Autoplay requiere silencio inicial
+                    'playlist': paisajesIDs.join(',')
                 },
                 events: {
-                    onReady: () => {
-                        isReady = true;
-                        document.getElementById('loading-message').textContent = t.apiReady;
-                        document.getElementById('start-button').textContent = t.startButton;
-                        document.getElementById('start-button').style.display = 'inline-block';
-                        updateChannelInfo();
-                    },
-                    onError: (e) => {
-                        console.error('Error:', e.data);
-                        document.getElementById('ch-title').textContent = '⚠️ Error. Changing...';
-                        setTimeout(() => changeChannel(1), 3000);
-                    }
+                    'onReady': (event) => event.target.playVideo()
                 }
             });
-        };
-
-        function initializePlayback() {
-            if (!isReady) return;
-            document.getElementById('start-button-overlay').style.display = 'none';
-            document.getElementById('player').style.opacity = '1';
-            player.mute(); // asegurar mute
-            player.playVideo();
-        }
-
-        function changeChannel(dir) {
-            if (!isReady) return;
-            currentIdx = (currentIdx + dir + channels.length) % channels.length;
-            player.loadVideoById(channels[currentIdx].id);
-            updateChannelInfo();
-        }
-
-        function updateChannelInfo() {
-            document.getElementById('ch-title').textContent = channels[currentIdx].title;
-        }
-
-        function togglePlayPause() {
-            if (!isReady) return;
-            if (player.getPlayerState() === YT.PlayerState.PLAYING) {
-                player.pauseVideo();
-            } else {
-                player.playVideo();
-            }
         }
     </script>
 </body>
