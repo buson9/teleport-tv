@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>RetroScreen TV</title>
+<title>Vintage Vault TV</title>
 <style>
 body {
   margin: 0;
@@ -12,7 +12,7 @@ body {
 }
 .site-name {
   text-align: center;
-  font-size: 42px;
+  font-size: 48px;
   font-weight: bold;
   color: #00ff88;
   margin-top: 15px;
@@ -59,6 +59,7 @@ body {
 @keyframes scanline { 0% {background-position:0 0;} 100% {background-position:0 2px;} }
 @keyframes flicker { 0%,100% {opacity:1;} 50% {opacity:0.95;} }
 .screen iframe { width: 100%; height: 100%; border: none; }
+
 .controls {
   display: flex;
   justify-content: center;
@@ -84,6 +85,7 @@ body {
   color: #070707;
   box-shadow: 0 0 10px #00ff88 inset, 0 0 20px #00ff88;
 }
+
 .panel {
   display: flex;
   justify-content: space-around;
@@ -100,31 +102,19 @@ body {
 .qr { width: 160px; margin-top: 10px; }
 small { color: #aaa; font-size: 12px; }
 ul { padding-left: 20px; }
-li.active { color: #00ff88; font-weight: bold; text-shadow: 0 0 5px #0f9d58; }
-.overlay {
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
-  background: rgba(0,0,0,0.7);
-  padding: 6px 10px;
-  border-radius: 8px;
-  color: #00ff88;
-  font-size: 14px;
-}
+
 .miniatures-wrapper {
-  position: absolute;
-  top: 10px;
-  right: 10px;
   overflow: hidden;
-  width: 260px;
-  height: 60px;
+  width: 100%;
+  margin-top: 15px;
   border-radius: 10px;
   border: 2px solid #00ff88;
+  height: 60px;
 }
 .miniatures {
   display: flex;
   gap: 5px;
-  position: absolute;
+  position: relative;
   animation: scroll 40s linear infinite;
 }
 @keyframes scroll {
@@ -162,16 +152,13 @@ li.active { color: #00ff88; font-weight: bold; text-shadow: 0 0 5px #0f9d58; }
 </head>
 <body>
 
-<div class="site-name">RetroScreen TV</div>
+<div class="site-name">Vintage Vault TV</div>
 
 <div class="tv-wrapper">
   <div class="tv">
     <div class="screen">
       <iframe id="videoFrame" src="" allowfullscreen></iframe>
       <div class="overlay" id="videoOverlay"></div>
-      <div class="miniatures-wrapper">
-        <div class="miniatures" id="miniatures"></div>
-      </div>
     </div>
 
     <div class="controls">
@@ -179,6 +166,10 @@ li.active { color: #00ff88; font-weight: bold; text-shadow: 0 0 5px #0f9d58; }
       <button class="btn" onclick="nextMovie()">▶</button>
       <button class="btn" onclick="randomMovie()">🎬</button>
       <span style="color:#00ff88; font-weight:bold; margin-left:10px;">Sit back, relax & enjoy!</span>
+    </div>
+
+    <div class="miniatures-wrapper">
+      <div class="miniatures" id="miniatures"></div>
     </div>
   </div>
 </div>
@@ -191,7 +182,10 @@ li.active { color: #00ff88; font-weight: bold; text-shadow: 0 0 5px #0f9d58; }
   </div>
   <div class="box">
     <h3 id="scheduleTitle"></h3>
-    <ul id="movieList"></ul>
+    <strong>Movies</strong>
+    <ul id="movieListMovies"></ul>
+    <strong>Cartoons</strong>
+    <ul id="movieListCartoons"></ul>
   </div>
   <div class="box">
     <h3 id="donateTitle"></h3>
@@ -204,8 +198,8 @@ li.active { color: #00ff88; font-weight: bold; text-shadow: 0 0 5px #0f9d58; }
 <script>
 const lang = navigator.language.startsWith("es") ? "es" : "en";
 const text = {
-  en: { aboutTitle:"About", aboutText:"RetroScreen TV streams classic movies and cartoons legally free.", legal:"All content is public domain or on Internet Archive.", schedule:"Programming", donate:"Support the Channel", donateText:"Support the channel! Scan QR to contribute via Takenos.", donateHint:"Scan and support" },
-  es: { aboutTitle:"Acerca de", aboutText:"RetroScreen TV transmite películas y dibujos animados legales y gratuitos.", legal:"Todo el contenido es de dominio público o en Internet Archive.", schedule:"Programación", donate:"Apoya el Canal", donateText:"¡Colabora con el canal! Escanea el QR para donar con Takenos.", donateHint:"Escanea y colabora" }
+  en: { aboutTitle:"About", aboutText:"Vintage Vault TV streams classic movies and cartoons legally free.", legal:"All content is public domain or on Internet Archive.", schedule:"Programming", donate:"Support the Channel", donateText:"Support the channel! Scan QR to contribute via Takenos.", donateHint:"Scan and support" },
+  es: { aboutTitle:"Acerca de", aboutText:"Vintage Vault TV transmite películas y dibujos animados legales y gratuitos.", legal:"Todo el contenido es de dominio público o en Internet Archive.", schedule:"Programación", donate:"Apoya el Canal", donateText:"¡Colabora con el canal! Escanea el QR para donar con Takenos.", donateHint:"Escanea y colabora" }
 };
 document.getElementById("aboutTitle").innerText = text[lang].aboutTitle;
 document.getElementById("aboutText").innerText = text[lang].aboutText;
@@ -217,9 +211,16 @@ document.getElementById("donateHint").innerText = text[lang].donateHint;
 
 // MOVIES
 const movies = [
-  {title:"Night of the Living Dead - Raw HD WS", src:"https://archive.org/embed/Night_Of_The_Living_Dead_raw_HD_WS", year:"1968", genre:"Horror", thumb:"https://archive.org/services/img/Night_Of_The_Living_Dead_raw_HD_WS", synopsis:"The classic zombie movie that started it all."},
-  {title:"Detour (1945) - Original", src:"https://archive.org/embed/detour-1945", year:"1945", genre:"Film Noir", thumb:"https://archive.org/services/img/detour-1945", synopsis:"Classic noir thriller of crime and fate."},
-  {title:"Peace on Earth (1939)", src:"https://archive.org/embed/peace-on-earth-1939", year:"1939", genre:"Animation", thumb:"https://archive.org/services/img/peace-on-earth-1939", synopsis:"Animated anti-war short film."}
+  {title:"Night of the Living Dead - Raw HD WS", src:"https://archive.org/embed/Night_Of_The_Living_Dead_raw_HD_WS", year:"1968", genre:"Horror", thumb:"https://archive.org/services/img/Night_Of_The_Living_Dead_raw_HD_WS"},
+  {title:"Night of the Living Dead - Remastered HD", src:"https://archive.org/embed/NightOfTheLivingDeadRemasteredHD", year:"1968", genre:"Horror", thumb:"https://archive.org/services/img/NightOfTheLivingDeadRemasteredHD"},
+  {title:"Night of the Living Dead - WS Int Print", src:"https://archive.org/embed/NightOfTheLivingDeadWSInternationalPrint", year:"1968", genre:"Horror", thumb:"https://archive.org/services/img/NightOfTheLivingDeadWSInternationalPrint"},
+  {title:"Detour (1945) - Original", src:"https://archive.org/embed/detour-1945", year:"1945", genre:"Film Noir", thumb:"https://archive.org/services/img/detour-1945"},
+  {title:"Detour (1945) - Colorized", src:"https://archive.org/embed/detour1945HD", year:"1945", genre:"Film Noir", thumb:"https://archive.org/services/img/detour1945HD"},
+  {title:"The Brain That Wouldn't Die - Extended Cut", src:"https://archive.org/embed/thebrainthatwouldntdie1962_202009/EXTENDED+CUT", year:"1962", genre:"Horror", thumb:"https://archive.org/services/img/thebrainthatwouldntdie1962_202009"},
+  {title:"The Brain That Wouldn't Die - Theatrical Cut", src:"https://archive.org/embed/thebrainthatwouldntdie1962_202009/THEATRICAL+CUT", year:"1962", genre:"Horror", thumb:"https://archive.org/services/img/thebrainthatwouldntdie1962_202009/THEATRICAL+CUT"},
+  {title:"Peace on Earth (1939)", src:"https://archive.org/embed/peace-on-earth-1939", year:"1939", genre:"Animation", thumb:"https://archive.org/services/img/peace-on-earth-1939"},
+  {title:"Looney Tunes - Circus Today (1940)", src:"https://archive.org/embed/looney-tunes-circus-today-1940-hd-logoless", year:"1940", genre:"Animation", thumb:"https://archive.org/services/img/looney-tunes-circus-today-1940-hd-logoless"},
+  {title:"3 TV of Tomorrow", src:"https://archive.org/embed/3-tv-of-tomorrow", year:"1939-1941", genre:"Animation", thumb:"https://archive.org/services/img/3-tv-of-tomorrow"}
 ];
 
 const commercial = {title:"Commercial Break"};
@@ -229,28 +230,30 @@ const iframe = document.getElementById("videoFrame");
 const overlay = document.getElementById("videoOverlay");
 const miniaturesDiv = document.getElementById("miniatures");
 
-// LIST
-const movieListEl = document.getElementById("movieList");
+// LISTS
+const movieListMovies = document.getElementById("movieListMovies");
+const movieListCartoons = document.getElementById("movieListCartoons");
 movies.forEach((m,i)=>{
   const li = document.createElement("li");
   li.textContent = m.title;
   li.id = "movie-"+i;
-  movieListEl.appendChild(li);
+  if(m.genre==="Animation") movieListCartoons.appendChild(li);
+  else movieListMovies.appendChild(li);
 });
 
-// MINIATURES CARRUSEL INFINITO
+// MINIATURES
 function updateMiniatures(){
   miniaturesDiv.innerHTML = "";
-  const allThumbs = [...movies, ...movies]; // duplicar
+  const allThumbs = [...movies, ...movies]; // duplicar para scroll infinito
   allThumbs.forEach((m,i)=>{
     const img = document.createElement("img");
     img.src = m.thumb;
-    img.title = m.title;
+    img.title = m.title+" ("+m.year+")";
     img.onclick = ()=>{playMovie(i % movies.length)};
     img.onmouseover = ()=>{
       let tip = document.createElement("div");
       tip.className="tooltip";
-      tip.innerText = m.synopsis;
+      tip.innerText = img.title;
       img.parentElement.appendChild(tip);
       tip.style.display="block";
     };
@@ -283,7 +286,7 @@ function playMovie(index){
   });
 }
 
-// ROTACIÓN AUTOMÁTICA
+// ROTATION
 let rotationTimer;
 function startRotation(){
   clearTimeout(rotationTimer);
@@ -299,8 +302,10 @@ function nextMovie(){ playMovie((playIndex+1)%movies.length); startRotation(); }
 function prevMovie(){ playMovie((playIndex-1+movies.length)%movies.length); startRotation(); }
 function randomMovie(){ playMovie(Math.floor(Math.random()*movies.length)); startRotation(); }
 
-// Start first movie
+// START
 playMovie(0);
 </script>
+
 </body>
 </html>
+
