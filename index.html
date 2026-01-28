@@ -196,7 +196,7 @@ ul li:hover { text-decoration: underline; }
   <div class="box">
     <h3 id="donateTitle"></h3>
     <p id="donateText"></p>
-    <button class="btn" id="donateBtn" style="padding: 12px 20px; font-size: 18px; border-radius: 10px; background-color:#00ff88; color:#070707; border:none; cursor:pointer; box-shadow: 0 0 10px #0f9d58;">Support the Site – Click to Donate</button>
+    <button class="btn" id="donateBtn" style="padding: 12px 20px; font-size: 18px; border-radius: 10px; background-color:#00ff88; color:#070707; border:none; cursor:pointer; box-shadow: 0 0 10px #0f9d58;">Click Here to Contribute!</button>
     <div id="donateModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); justify-content:center; align-items:center; z-index:1000;">
       <div style="background:#111; padding:25px; border-radius:15px; text-align:center;">
         <h2 style="color:#ff4444;">Thank you for supporting RetroReel TV!</h2>
@@ -213,8 +213,8 @@ ul li:hover { text-decoration: underline; }
 // Idioma
 const lang = navigator.language.startsWith("es") ? "es" : "en";
 const text = {
-  en: { aboutTitle:"About", aboutText:"RetroReel TV streams classic movies and cartoons legally free.", legal:"All content is public domain or on Internet Archive.", schedule:"Programming", donate:"Support the Channel", donateText:"Support the site! Click to donate." },
-  es: { aboutTitle:"Acerca de", aboutText:"RetroReel TV transmite películas y dibujos animados legales y gratuitos.", legal:"Todo el contenido es de dominio público o en Internet Archive.", schedule:"Programación", donate:"Apoya el Canal", donateText:"¡Colabora con el sitio! Haz clic para donar." }
+  en: { aboutTitle:"About", aboutText:"RetroReel TV streams classic movies and cartoons legally free.", legal:"All content is legally free to watch, from public domain or authorized sources.", schedule:"Programming", donate:"Support the Channel", donateText:"Support the site! Click to donate." },
+  es: { aboutTitle:"Acerca de", aboutText:"RetroReel TV transmite películas y dibujos animados legales y gratuitos.", legal:"Todo el contenido es legal y gratuito, proveniente de dominio público o fuentes autorizadas.", schedule:"Programación", donate:"Apoya el Canal", donateText:"¡Colabora con el sitio! Haz clic para donar." }
 };
 document.getElementById("aboutTitle").innerText = text[lang].aboutTitle;
 document.getElementById("aboutText").innerText = text[lang].aboutText;
@@ -222,7 +222,7 @@ document.getElementById("legalText").innerText = text[lang].legal;
 document.getElementById("scheduleTitle").innerText = text[lang].schedule;
 document.getElementById("donateTitle").innerText = text[lang].donate;
 document.getElementById("donateText").innerText = text[lang].donateText;
-document.getElementById("donateBtn").innerText = lang==="es"?"Colabora con el Sitio – Haz clic para donar":"Support the Site – Click to Donate";
+document.getElementById("donateBtn").innerText = lang==="es"?"Haz clic aquí para colaborar":"Click Here to Contribute!";
 
 // Películas
 const movies = [
@@ -238,6 +238,7 @@ const movies = [
   {title:"3 TV of Tomorrow", src:"https://archive.org/embed/3-tv-of-tomorrow", year:"1939-1941", genre:"Animation", thumb:"https://archive.org/services/img/3-tv-of-tomorrow"}
 ];
 
+// Comercial break
 const commercial = {title:"Commercial Break"};
 let playIndex = 0;
 let videoCount = 0;
@@ -325,3 +326,5 @@ document.getElementById("donateBtn").onclick = function() {
 
 </body>
 </html>
+
+
