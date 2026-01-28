@@ -101,7 +101,8 @@ body {
 }
 .qr { width: 160px; margin-top: 10px; }
 small { color: #aaa; font-size: 12px; }
-ul { padding-left: 20px; }
+ul { padding-left: 20px; cursor:pointer; }
+ul li:hover { text-decoration: underline; }
 
 .miniatures-wrapper {
   overflow: hidden;
@@ -190,16 +191,24 @@ ul { padding-left: 20px; }
   <div class="box">
     <h3 id="donateTitle"></h3>
     <p id="donateText"></p>
-    <img src="takenos.png" class="qr">
-    <small id="donateHint"></small>
+    <button class="btn" id="donateBtn" style="padding: 12px 20px; font-size: 18px; border-radius: 10px; background-color:#00ff88; color:#070707; border:none; cursor:pointer; box-shadow: 0 0 10px #0f9d58;">Support the Site – Click to Donate</button>
+    <div id="donateModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); justify-content:center; align-items:center; z-index:1000;">
+      <div style="background:#111; padding:25px; border-radius:15px; text-align:center;">
+        <h2 style="color:#00ff88;">Thank you for supporting Vintage Vault TV!</h2>
+        <p style="color:#eee;">Scan this QR to donate securely:</p>
+        <img src="takenos.png" style="width:180px; margin-top:10px;">
+        <br><br>
+        <button onclick="document.getElementById('donateModal').style.display='none'" style="padding:10px 20px; font-size:16px; border-radius:8px; background-color:#ff4444; color:#fff; border:none; cursor:pointer;">Close</button>
+      </div>
+    </div>
   </div>
 </div>
 
 <script>
 const lang = navigator.language.startsWith("es") ? "es" : "en";
 const text = {
-  en: { aboutTitle:"About", aboutText:"Vintage Vault TV streams classic movies and cartoons legally free.", legal:"All content is public domain or on Internet Archive.", schedule:"Programming", donate:"Support the Channel", donateText:"Support the channel! Scan QR to contribute via Takenos.", donateHint:"Scan and support" },
-  es: { aboutTitle:"Acerca de", aboutText:"Vintage Vault TV transmite películas y dibujos animados legales y gratuitos.", legal:"Todo el contenido es de dominio público o en Internet Archive.", schedule:"Programación", donate:"Apoya el Canal", donateText:"¡Colabora con el canal! Escanea el QR para donar con Takenos.", donateHint:"Escanea y colabora" }
+  en: { aboutTitle:"About", aboutText:"Vintage Vault TV streams classic movies and cartoons legally free.", legal:"All content is public domain or on Internet Archive.", schedule:"Programming", donate:"Support the Channel", donateText:"Support the site! Click to donate." },
+  es: { aboutTitle:"Acerca de", aboutText:"Vintage Vault TV transmite películas y dibujos animados legales y gratuitos.", legal:"Todo el contenido es de dominio público o en Internet Archive.", schedule:"Programación", donate:"Apoya el Canal", donateText:"¡Colabora con el sitio! Haz clic para donar." }
 };
 document.getElementById("aboutTitle").innerText = text[lang].aboutTitle;
 document.getElementById("aboutText").innerText = text[lang].aboutText;
@@ -207,7 +216,7 @@ document.getElementById("legalText").innerText = text[lang].legal;
 document.getElementById("scheduleTitle").innerText = text[lang].schedule;
 document.getElementById("donateTitle").innerText = text[lang].donate;
 document.getElementById("donateText").innerText = text[lang].donateText;
-document.getElementById("donateHint").innerText = text[lang].donateHint;
+document.getElementById("donateBtn").innerText = lang==="es"?"Colabora con el Sitio – Haz clic para donar":"Support the Site – Click to Donate";
 
 // MOVIES
 const movies = [
@@ -236,7 +245,8 @@ const movieListCartoons = document.getElementById("movieListCartoons");
 movies.forEach((m,i)=>{
   const li = document.createElement("li");
   li.textContent = m.title;
-  li.id = "movie-"+i;
+  li.style.color = m.genre==="Animation"?"#ffaa00":"#00ff88";
+  li.onclick = ()=>playMovie(i);
   if(m.genre==="Animation") movieListCartoons.appendChild(li);
   else movieListMovies.appendChild(li);
 });
@@ -280,10 +290,6 @@ function playMovie(index){
     iframe.src = movies[playIndex].src;
     updateMiniatures();
   }
-  movies.forEach((_,i)=>{
-    const el = document.getElementById("movie-"+i);
-    el.classList.toggle("active", i===playIndex);
-  });
 }
 
 // ROTATION
@@ -304,8 +310,12 @@ function randomMovie(){ playMovie(Math.floor(Math.random()*movies.length)); star
 
 // START
 playMovie(0);
+
+// DONATE BUTTON
+document.getElementById("donateBtn").onclick = function() {
+  document.getElementById("donateModal").style.display = "flex";
+};
 </script>
 
 </body>
 </html>
-
