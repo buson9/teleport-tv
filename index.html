@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Vintage Vault TV</title>
+<title>RetroReel TV</title>
 <style>
 body {
   margin: 0;
@@ -14,11 +14,18 @@ body {
   text-align: center;
   font-size: 48px;
   font-weight: bold;
-  color: #00ff88;
+  color: #ff4444; /* rojo neon */
   margin-top: 15px;
-  text-shadow: 0 0 10px #0f9d58, 0 0 20px #0f9d58, 0 0 30px #00ff88;
+  text-shadow: 0 0 5px #ff4444, 0 0 10px #ff4444, 0 0 20px #ff8888, 0 0 30px #ff4444;
   letter-spacing: 2px;
+  animation: neonGlow 1.5s ease-in-out infinite alternate;
 }
+@keyframes neonGlow {
+  0% { text-shadow: 0 0 5px #ff4444, 0 0 10px #ff4444, 0 0 20px #ff8888, 0 0 30px #ff4444; }
+  50% { text-shadow: 0 0 10px #ff4444, 0 0 20px #ff4444, 0 0 40px #ff8888, 0 0 50px #ff4444; }
+  100% { text-shadow: 0 0 5px #ff4444, 0 0 10px #ff4444, 0 0 20px #ff8888, 0 0 30px #ff4444; }
+}
+
 .tv-wrapper {
   display: flex;
   justify-content: center;
@@ -52,7 +59,7 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  box-shadow: inset 0 0 80px rgba(0,255,150,0.15);
+  box-shadow: inset 0 0 80px rgba(255,0,0,0.15);
   pointer-events: none;
   animation: flicker 0.2s infinite;
 }
@@ -99,8 +106,6 @@ body {
   width: 30%;
   min-width: 250px;
 }
-.qr { width: 160px; margin-top: 10px; }
-small { color: #aaa; font-size: 12px; }
 ul { padding-left: 20px; cursor:pointer; }
 ul li:hover { text-decoration: underline; }
 
@@ -141,7 +146,7 @@ ul li:hover { text-decoration: underline; }
   left: 50%;
   transform: translateX(-50%);
   background: rgba(0,0,0,0.85);
-  color: #00ff88;
+  color: #ff4444;
   padding: 5px 10px;
   border-radius: 5px;
   font-size: 12px;
@@ -153,7 +158,7 @@ ul li:hover { text-decoration: underline; }
 </head>
 <body>
 
-<div class="site-name">Vintage Vault TV</div>
+<div class="site-name">RetroReel TV</div>
 
 <div class="tv-wrapper">
   <div class="tv">
@@ -166,7 +171,7 @@ ul li:hover { text-decoration: underline; }
       <button class="btn" onclick="prevMovie()">⏪</button>
       <button class="btn" onclick="nextMovie()">▶</button>
       <button class="btn" onclick="randomMovie()">🎬</button>
-      <span style="color:#00ff88; font-weight:bold; margin-left:10px;">Sit back, relax & enjoy!</span>
+      <span style="color:#ff4444; font-weight:bold; margin-left:10px;">Sit back, relax & enjoy!</span>
     </div>
 
     <div class="miniatures-wrapper">
@@ -194,7 +199,7 @@ ul li:hover { text-decoration: underline; }
     <button class="btn" id="donateBtn" style="padding: 12px 20px; font-size: 18px; border-radius: 10px; background-color:#00ff88; color:#070707; border:none; cursor:pointer; box-shadow: 0 0 10px #0f9d58;">Support the Site – Click to Donate</button>
     <div id="donateModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); justify-content:center; align-items:center; z-index:1000;">
       <div style="background:#111; padding:25px; border-radius:15px; text-align:center;">
-        <h2 style="color:#00ff88;">Thank you for supporting Vintage Vault TV!</h2>
+        <h2 style="color:#ff4444;">Thank you for supporting RetroReel TV!</h2>
         <p style="color:#eee;">Scan this QR to donate securely:</p>
         <img src="takenos.png" style="width:180px; margin-top:10px;">
         <br><br>
@@ -205,10 +210,11 @@ ul li:hover { text-decoration: underline; }
 </div>
 
 <script>
+// Idioma
 const lang = navigator.language.startsWith("es") ? "es" : "en";
 const text = {
-  en: { aboutTitle:"About", aboutText:"Vintage Vault TV streams classic movies and cartoons legally free.", legal:"All content is public domain or on Internet Archive.", schedule:"Programming", donate:"Support the Channel", donateText:"Support the site! Click to donate." },
-  es: { aboutTitle:"Acerca de", aboutText:"Vintage Vault TV transmite películas y dibujos animados legales y gratuitos.", legal:"Todo el contenido es de dominio público o en Internet Archive.", schedule:"Programación", donate:"Apoya el Canal", donateText:"¡Colabora con el sitio! Haz clic para donar." }
+  en: { aboutTitle:"About", aboutText:"RetroReel TV streams classic movies and cartoons legally free.", legal:"All content is public domain or on Internet Archive.", schedule:"Programming", donate:"Support the Channel", donateText:"Support the site! Click to donate." },
+  es: { aboutTitle:"Acerca de", aboutText:"RetroReel TV transmite películas y dibujos animados legales y gratuitos.", legal:"Todo el contenido es de dominio público o en Internet Archive.", schedule:"Programación", donate:"Apoya el Canal", donateText:"¡Colabora con el sitio! Haz clic para donar." }
 };
 document.getElementById("aboutTitle").innerText = text[lang].aboutTitle;
 document.getElementById("aboutText").innerText = text[lang].aboutText;
@@ -218,7 +224,7 @@ document.getElementById("donateTitle").innerText = text[lang].donate;
 document.getElementById("donateText").innerText = text[lang].donateText;
 document.getElementById("donateBtn").innerText = lang==="es"?"Colabora con el Sitio – Haz clic para donar":"Support the Site – Click to Donate";
 
-// MOVIES
+// Películas
 const movies = [
   {title:"Night of the Living Dead - Raw HD WS", src:"https://archive.org/embed/Night_Of_The_Living_Dead_raw_HD_WS", year:"1968", genre:"Horror", thumb:"https://archive.org/services/img/Night_Of_The_Living_Dead_raw_HD_WS"},
   {title:"Night of the Living Dead - Remastered HD", src:"https://archive.org/embed/NightOfTheLivingDeadRemasteredHD", year:"1968", genre:"Horror", thumb:"https://archive.org/services/img/NightOfTheLivingDeadRemasteredHD"},
@@ -239,7 +245,7 @@ const iframe = document.getElementById("videoFrame");
 const overlay = document.getElementById("videoOverlay");
 const miniaturesDiv = document.getElementById("miniatures");
 
-// LISTS
+// LISTAS
 const movieListMovies = document.getElementById("movieListMovies");
 const movieListCartoons = document.getElementById("movieListCartoons");
 movies.forEach((m,i)=>{
@@ -251,7 +257,7 @@ movies.forEach((m,i)=>{
   else movieListMovies.appendChild(li);
 });
 
-// MINIATURES
+// MINIATURAS
 function updateMiniatures(){
   miniaturesDiv.innerHTML = "";
   const allThumbs = [...movies, ...movies]; // duplicar para scroll infinito
@@ -276,7 +282,7 @@ function updateMiniatures(){
   });
 }
 
-// PLAY MOVIE
+// REPRODUCIR PELÍCULA
 function playMovie(index){
   playIndex = index;
   videoCount++;
@@ -292,7 +298,7 @@ function playMovie(index){
   }
 }
 
-// ROTATION
+// ROTACIÓN
 let rotationTimer;
 function startRotation(){
   clearTimeout(rotationTimer);
@@ -303,7 +309,7 @@ function startRotation(){
 }
 startRotation();
 
-// CONTROLS
+// CONTROLES
 function nextMovie(){ playMovie((playIndex+1)%movies.length); startRotation(); }
 function prevMovie(){ playMovie((playIndex-1+movies.length)%movies.length); startRotation(); }
 function randomMovie(){ playMovie(Math.floor(Math.random()*movies.length)); startRotation(); }
