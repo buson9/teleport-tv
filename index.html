@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <title>Public Domain TV</title>
-
 <style>
 body {
   margin: 0;
@@ -33,6 +32,8 @@ body {
   background: black;
   border-radius: 15px;
   overflow: hidden;
+  width: 100%;
+  height: 405px;
 }
 
 /* CRT EFFECT */
@@ -57,11 +58,11 @@ body {
   pointer-events: none;
 }
 
-/* ===== VIDEO ===== */
-video {
+/* ===== Player iframe ===== */
+.screen iframe {
   width: 100%;
-  height: auto;
-  display: block;
+  height: 100%;
+  border: none;
 }
 
 /* ===== CONTROLS ===== */
@@ -80,10 +81,11 @@ video {
   cursor: pointer;
   font-size: 18px;
   box-shadow: inset 0 0 8px #000;
+  color: white;
 }
 
-.red { background:#b00020; color:white; }
-.yellow { background:#c9a400; }
+.red { background:#b00020; }
+.yellow { background:#c9a400; color:#000; }
 .green { background:#0f9d58; }
 
 .btn:active { transform: scale(0.9); }
@@ -111,29 +113,32 @@ small {
   color: #aaa;
   font-size: 12px;
 }
+
+ul {
+  padding-left: 20px;
+}
 </style>
 </head>
-
 <body>
 
+<!-- TV -->
 <div class="tv-wrapper">
   <div class="tv">
     <div class="screen">
-      <video id="movie" crossorigin="anonymous">
-        <source src="https://archive.org/download/Night_Of_The_Living_Dead_raw_HD_WS/Night_Of_The_Living_Dead_1968_720p.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-      </video>
+      <!-- Internet Archive embed -->
+      <iframe id="videoFrame" src="https://archive.org/embed/Night_Of_The_Living_Dead_raw_HD_WS" allowfullscreen></iframe>
     </div>
 
     <div class="controls">
-      <button class="btn green" onclick="togglePlay()">▶</button>
-      <button class="btn yellow" onclick="skip(-30)">⏪</button>
-      <button class="btn yellow" onclick="skip(30)">⏩</button>
-      <button class="btn red" onclick="mute()">🔇</button>
+      <button class="btn green" onclick="simulate('play')">▶</button>
+      <button class="btn yellow" onclick="simulate('rewind')">⏪</button>
+      <button class="btn yellow" onclick="simulate('forward')">⏩</button>
+      <button class="btn red" onclick="simulate('mute')">🔇</button>
     </div>
   </div>
 </div>
 
+<!-- Panels -->
 <div class="panel">
   <div class="box">
     <h3 id="aboutTitle"></h3>
@@ -143,7 +148,7 @@ small {
 
   <div class="box">
     <h3 id="scheduleTitle"></h3>
-    <ul>
+    <ul id="movieList">
       <li>Night of the Living Dead (1968)</li>
       <li>Detour (1945)</li>
       <li>The Brain That Wouldn't Die (1962)</li>
@@ -159,19 +164,7 @@ small {
 </div>
 
 <script>
-const video = document.getElementById("movie");
-
-function togglePlay() {
-  video.paused ? video.play() : video.pause();
-}
-function skip(sec) {
-  video.currentTime += sec;
-}
-function mute() {
-  video.muted = !video.muted;
-}
-
-/* LANGUAGE */
+// LANGUAGE DETECTION
 const lang = navigator.language.startsWith("es") ? "es" : "en";
 
 const text = {
@@ -199,8 +192,12 @@ document.getElementById("legalText").innerText = text[lang].legal;
 document.getElementById("scheduleTitle").innerText = text[lang].schedule;
 document.getElementById("donateTitle").innerText = text[lang].donate;
 document.getElementById("donateText").innerText = text[lang].donateText;
+
+// SIMULATED BUTTONS
+function simulate(action){
+  alert("This button is for UI simulation only: " + action);
+}
 </script>
 
 </body>
 </html>
-
