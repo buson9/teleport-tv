@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Public Domain TV</title>
+<title>RetroScreen TV</title>
 <style>
 body {
   margin: 0;
@@ -10,33 +10,28 @@ body {
   font-family: "Courier New", monospace;
   color: #eaeaea;
 }
-
-/* ===== SITE NAME ===== */
 .site-name {
   text-align: center;
-  font-size: 36px;
+  font-size: 42px;
   font-weight: bold;
   color: #00ff88;
   margin-top: 15px;
-  text-shadow: 0 0 10px #0f9d58, 0 0 20px #0f9d58;
+  text-shadow: 0 0 10px #0f9d58, 0 0 20px #0f9d58, 0 0 30px #00ff88;
+  letter-spacing: 2px;
 }
-
-/* ===== TV FRAME ===== */
 .tv-wrapper {
   display: flex;
   justify-content: center;
   margin-top: 10px;
 }
-
 .tv {
   background: linear-gradient(#4b2e1e, #2a160c);
   padding: 25px;
   border-radius: 25px;
   width: 760px;
   box-shadow: inset 0 0 40px #000, 0 25px 50px #000;
+  position: relative;
 }
-
-/* ===== CRT SCREEN ===== */
 .screen {
   position: relative;
   background: black;
@@ -45,37 +40,25 @@ body {
   width: 100%;
   height: 405px;
 }
-
-/* CRT EFFECT */
 .screen::before {
   content: "";
   position: absolute;
   inset: 0;
-  background:
-    repeating-linear-gradient(
-      to bottom,
-      rgba(255,255,255,0.03),
-      rgba(0,0,0,0.05) 2px
-    );
+  background: repeating-linear-gradient(to bottom, rgba(255,255,255,0.03), rgba(0,0,0,0.05) 2px);
   pointer-events: none;
+  animation: scanline 0.5s linear infinite;
 }
-
 .screen::after {
   content: "";
   position: absolute;
   inset: 0;
-  box-shadow: inset 0 0 60px rgba(0,255,150,0.15);
+  box-shadow: inset 0 0 80px rgba(0,255,150,0.15);
   pointer-events: none;
+  animation: flicker 0.2s infinite;
 }
-
-/* ===== Player iframe ===== */
-.screen iframe {
-  width: 100%;
-  height: 100%;
-  border: none;
-}
-
-/* ===== CONTROLS ===== */
+@keyframes scanline { 0% {background-position:0 0;} 100% {background-position:0 2px;} }
+@keyframes flicker { 0%,100% {opacity:1;} 50% {opacity:0.95;} }
+.screen iframe { width: 100%; height: 100%; border: none; }
 .controls {
   display: flex;
   justify-content: center;
@@ -84,31 +67,29 @@ body {
   margin-top: 15px;
   flex-wrap: wrap;
 }
-
 .btn {
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: none;
+  padding: 10px 16px;
+  border-radius: 50%;
+  border: 2px solid #0f9d58;
   cursor: pointer;
   font-size: 16px;
   font-weight: bold;
-  background-color: #0f9d58;
-  color: #fff;
-  box-shadow: inset 0 0 8px #000;
+  background-color: #070707;
+  color: #00ff88;
+  box-shadow: 0 0 5px #00ff88 inset, 0 0 10px #00ff88;
+  transition: all 0.2s;
 }
-
 .btn:hover {
   background-color: #00ff88;
+  color: #070707;
+  box-shadow: 0 0 10px #00ff88 inset, 0 0 20px #00ff88;
 }
-
-/* ===== PANELS ===== */
 .panel {
   display: flex;
   justify-content: space-around;
   margin: 30px;
   flex-wrap: wrap;
 }
-
 .box {
   background: #111;
   padding: 15px;
@@ -116,148 +97,210 @@ body {
   width: 30%;
   min-width: 250px;
 }
-
-.qr {
-  width: 160px;
-  margin-top: 10px;
+.qr { width: 160px; margin-top: 10px; }
+small { color: #aaa; font-size: 12px; }
+ul { padding-left: 20px; }
+li.active { color: #00ff88; font-weight: bold; text-shadow: 0 0 5px #0f9d58; }
+.overlay {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  background: rgba(0,0,0,0.7);
+  padding: 6px 10px;
+  border-radius: 8px;
+  color: #00ff88;
+  font-size: 14px;
 }
-
-small {
-  color: #aaa;
+.miniatures-wrapper {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  overflow: hidden;
+  width: 260px;
+  height: 60px;
+  border-radius: 10px;
+  border: 2px solid #00ff88;
+}
+.miniatures {
+  display: flex;
+  gap: 5px;
+  position: absolute;
+  animation: scroll 40s linear infinite;
+}
+@keyframes scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.miniatures img {
+  width: 80px;
+  height: 45px;
+  border: 2px solid #00ff88;
+  border-radius: 5px;
+  cursor: pointer;
+  object-fit: cover;
+  transition: transform 0.3s, border-color 0.3s;
+}
+.miniatures img.active {
+  border-color: #ff4444;
+  transform: scale(1.2);
+}
+.tooltip {
+  position: absolute;
+  bottom: 55px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.85);
+  color: #00ff88;
+  padding: 5px 10px;
+  border-radius: 5px;
   font-size: 12px;
-}
-
-ul {
-  padding-left: 20px;
+  white-space: nowrap;
+  display: none;
+  z-index: 10;
 }
 </style>
 </head>
 <body>
 
-<div class="site-name">Public Domain TV</div>
+<div class="site-name">RetroScreen TV</div>
 
-<!-- TV -->
 <div class="tv-wrapper">
   <div class="tv">
     <div class="screen">
-      <!-- Video iframe dinámico -->
       <iframe id="videoFrame" src="" allowfullscreen></iframe>
+      <div class="overlay" id="videoOverlay"></div>
+      <div class="miniatures-wrapper">
+        <div class="miniatures" id="miniatures"></div>
+      </div>
     </div>
 
     <div class="controls">
-      <button class="btn" onclick="prevMovie()">Previous Movie ⏪</button>
-      <button class="btn" onclick="nextMovie()">Next Movie ▶</button>
-      <button class="btn" onclick="randomMovie()">Surprise 🎬</button>
+      <button class="btn" onclick="prevMovie()">⏪</button>
+      <button class="btn" onclick="nextMovie()">▶</button>
+      <button class="btn" onclick="randomMovie()">🎬</button>
       <span style="color:#00ff88; font-weight:bold; margin-left:10px;">Sit back, relax & enjoy!</span>
     </div>
   </div>
 </div>
 
-<!-- Panels -->
 <div class="panel">
   <div class="box">
     <h3 id="aboutTitle"></h3>
     <p id="aboutText"></p>
     <small id="legalText"></small>
   </div>
-
   <div class="box">
     <h3 id="scheduleTitle"></h3>
-    <ul id="movieList">
-      <!-- Se llenará automáticamente -->
-    </ul>
+    <ul id="movieList"></ul>
   </div>
-
   <div class="box">
     <h3 id="donateTitle"></h3>
     <p id="donateText"></p>
-    <img src="takenos-qr.png" class="qr">
-    <small>QR – Takenos</small>
+    <img src="takenos.png" class="qr">
+    <small id="donateHint"></small>
   </div>
 </div>
 
 <script>
-// LANGUAGE DETECTION
 const lang = navigator.language.startsWith("es") ? "es" : "en";
-
 const text = {
-  en: {
-    aboutTitle: "About",
-    aboutText: "Public Domain TV streams classic movies that are legally free to watch.",
-    legal: "All content is in the public domain or hosted on Internet Archive.",
-    schedule: "Programming",
-    donate: "Support This Project",
-    donateText: "Help keep this project alive."
-  },
-  es: {
-    aboutTitle: "Acerca de",
-    aboutText: "Public Domain TV transmite películas clásicas legalmente gratuitas.",
-    legal: "Todo el contenido es de dominio público o de Internet Archive.",
-    schedule: "Programación",
-    donate: "Apoya el Proyecto",
-    donateText: "Ayuda a mantener vivo este proyecto."
-  }
+  en: { aboutTitle:"About", aboutText:"RetroScreen TV streams classic movies and cartoons legally free.", legal:"All content is public domain or on Internet Archive.", schedule:"Programming", donate:"Support the Channel", donateText:"Support the channel! Scan QR to contribute via Takenos.", donateHint:"Scan and support" },
+  es: { aboutTitle:"Acerca de", aboutText:"RetroScreen TV transmite películas y dibujos animados legales y gratuitos.", legal:"Todo el contenido es de dominio público o en Internet Archive.", schedule:"Programación", donate:"Apoya el Canal", donateText:"¡Colabora con el canal! Escanea el QR para donar con Takenos.", donateHint:"Escanea y colabora" }
 };
-
 document.getElementById("aboutTitle").innerText = text[lang].aboutTitle;
 document.getElementById("aboutText").innerText = text[lang].aboutText;
 document.getElementById("legalText").innerText = text[lang].legal;
 document.getElementById("scheduleTitle").innerText = text[lang].schedule;
 document.getElementById("donateTitle").innerText = text[lang].donate;
 document.getElementById("donateText").innerText = text[lang].donateText;
+document.getElementById("donateHint").innerText = text[lang].donateHint;
 
-// ====== MOVIE LIST AND ROTATION ======
+// MOVIES
 const movies = [
-  {title:"Night of the Living Dead - Raw HD WS", src:"https://archive.org/embed/Night_Of_The_Living_Dead_raw_HD_WS"},
-  {title:"Night of the Living Dead - Remastered HD", src:"https://archive.org/download/Night_Of_The_Living_Dead_raw_HD_WS/NightOfTheLivingDeadRemasteredHD.mp4"},
-  {title:"Night of the Living Dead - WS International Print", src:"https://archive.org/download/Night_Of_The_Living_Dead_raw_HD_WS/NightOfTheLivingDeadWSInternationalPrint.mp4"},
-  {title:"Detour (1945) - Original", src:"https://archive.org/embed/detour-1945"},
-  {title:"Detour (1945) - Colorized", src:"https://archive.org/embed/detour1945HD"},
-  {title:"Detour (1945) - Spanish", src:"https://archive.org/embed/1945-detour-el-desvio-edgar-g-ulmer_202005"},
-  {title:"The Brain That Wouldn't Die - Extended Cut", src:"https://archive.org/download/thebrainthatwouldntdie1962_202009/EXTENDED+CUT.mp4"},
-  {title:"The Brain That Wouldn't Die - Theatrical Cut", src:"https://archive.org/download/thebrainthatwouldntdie1962_202009/THEATRICAL+CUT.mp4"}
+  {title:"Night of the Living Dead - Raw HD WS", src:"https://archive.org/embed/Night_Of_The_Living_Dead_raw_HD_WS", year:"1968", genre:"Horror", thumb:"https://archive.org/services/img/Night_Of_The_Living_Dead_raw_HD_WS", synopsis:"The classic zombie movie that started it all."},
+  {title:"Detour (1945) - Original", src:"https://archive.org/embed/detour-1945", year:"1945", genre:"Film Noir", thumb:"https://archive.org/services/img/detour-1945", synopsis:"Classic noir thriller of crime and fate."},
+  {title:"Peace on Earth (1939)", src:"https://archive.org/embed/peace-on-earth-1939", year:"1939", genre:"Animation", thumb:"https://archive.org/services/img/peace-on-earth-1939", synopsis:"Animated anti-war short film."}
 ];
 
+const commercial = {title:"Commercial Break"};
+let playIndex = 0;
+let videoCount = 0;
+const iframe = document.getElementById("videoFrame");
+const overlay = document.getElementById("videoOverlay");
+const miniaturesDiv = document.getElementById("miniatures");
+
+// LIST
 const movieListEl = document.getElementById("movieList");
-movies.forEach(m => {
+movies.forEach((m,i)=>{
   const li = document.createElement("li");
   li.textContent = m.title;
+  li.id = "movie-"+i;
   movieListEl.appendChild(li);
 });
 
-let currentIndex = 0;
-const iframe = document.getElementById("videoFrame");
+// MINIATURES CARRUSEL INFINITO
+function updateMiniatures(){
+  miniaturesDiv.innerHTML = "";
+  const allThumbs = [...movies, ...movies]; // duplicar
+  allThumbs.forEach((m,i)=>{
+    const img = document.createElement("img");
+    img.src = m.thumb;
+    img.title = m.title;
+    img.onclick = ()=>{playMovie(i % movies.length)};
+    img.onmouseover = ()=>{
+      let tip = document.createElement("div");
+      tip.className="tooltip";
+      tip.innerText = m.synopsis;
+      img.parentElement.appendChild(tip);
+      tip.style.display="block";
+    };
+    img.onmouseout = ()=>{
+      const tip = img.parentElement.querySelector(".tooltip");
+      if(tip) tip.remove();
+    };
+    img.classList.toggle("active", i % movies.length === playIndex);
+    miniaturesDiv.appendChild(img);
+  });
+}
 
+// PLAY MOVIE
 function playMovie(index){
-  currentIndex = index;
-  iframe.src = movies[currentIndex].src;
+  playIndex = index;
+  videoCount++;
+  if(videoCount%4 ===0){
+    iframe.src = "";
+    overlay.innerText = commercial.title;
+    miniaturesDiv.innerHTML="";
+    setTimeout(()=>{ nextMovie(); },15000);
+  }else{
+    overlay.innerText = movies[playIndex].title+" ("+movies[playIndex].year+" - "+movies[playIndex].genre+")";
+    iframe.src = movies[playIndex].src;
+    updateMiniatures();
+  }
+  movies.forEach((_,i)=>{
+    const el = document.getElementById("movie-"+i);
+    el.classList.toggle("active", i===playIndex);
+  });
 }
 
-// Start with first movie
+// ROTACIÓN AUTOMÁTICA
+let rotationTimer;
+function startRotation(){
+  clearTimeout(rotationTimer);
+  rotationTimer = setTimeout(()=>{
+    nextMovie();
+    startRotation();
+  }, 30*60*1000);
+}
+startRotation();
+
+// CONTROLS
+function nextMovie(){ playMovie((playIndex+1)%movies.length); startRotation(); }
+function prevMovie(){ playMovie((playIndex-1+movies.length)%movies.length); startRotation(); }
+function randomMovie(){ playMovie(Math.floor(Math.random()*movies.length)); startRotation(); }
+
+// Start first movie
 playMovie(0);
-
-// Rotate movies every 5 minutes automatically
-setInterval(()=>{
-  currentIndex = (currentIndex+1) % movies.length;
-  playMovie(currentIndex);
-}, 300000); // 5 minutes
-
-// ====== CONTROL FUNCTIONS ======
-function nextMovie(){
-  currentIndex = (currentIndex + 1) % movies.length;
-  playMovie(currentIndex);
-}
-
-function prevMovie(){
-  currentIndex = (currentIndex - 1 + movies.length) % movies.length;
-  playMovie(currentIndex);
-}
-
-function randomMovie(){
-  currentIndex = Math.floor(Math.random() * movies.length);
-  playMovie(currentIndex);
-}
 </script>
-
 </body>
 </html>
