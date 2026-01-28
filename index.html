@@ -11,11 +11,21 @@ body {
   color: #eaeaea;
 }
 
+/* ===== SITE NAME ===== */
+.site-name {
+  text-align: center;
+  font-size: 36px;
+  font-weight: bold;
+  color: #00ff88;
+  margin-top: 15px;
+  text-shadow: 0 0 10px #0f9d58, 0 0 20px #0f9d58;
+}
+
 /* ===== TV FRAME ===== */
 .tv-wrapper {
   display: flex;
   justify-content: center;
-  margin-top: 30px;
+  margin-top: 10px;
 }
 
 .tv {
@@ -121,12 +131,14 @@ ul {
 </head>
 <body>
 
+<div class="site-name">Public Domain TV</div>
+
 <!-- TV -->
 <div class="tv-wrapper">
   <div class="tv">
     <div class="screen">
-      <!-- Internet Archive embed -->
-      <iframe id="videoFrame" src="https://archive.org/embed/Night_Of_The_Living_Dead_raw_HD_WS" allowfullscreen></iframe>
+      <!-- Video iframe dinámico -->
+      <iframe id="videoFrame" src="" allowfullscreen></iframe>
     </div>
 
     <div class="controls">
@@ -149,9 +161,7 @@ ul {
   <div class="box">
     <h3 id="scheduleTitle"></h3>
     <ul id="movieList">
-      <li>Night of the Living Dead (1968)</li>
-      <li>Detour (1945)</li>
-      <li>The Brain That Wouldn't Die (1962)</li>
+      <!-- Se llenará automáticamente -->
     </ul>
   </div>
 
@@ -197,6 +207,42 @@ document.getElementById("donateText").innerText = text[lang].donateText;
 function simulate(action){
   alert("This button is for UI simulation only: " + action);
 }
+
+// ====== MOVIE LIST AND ROTATION ======
+const movies = [
+  {title:"Night of the Living Dead - Raw HD WS", src:"https://archive.org/embed/Night_Of_The_Living_Dead_raw_HD_WS"},
+  {title:"Night of the Living Dead - Remastered HD", src:"https://archive.org/download/Night_Of_The_Living_Dead_raw_HD_WS/NightOfTheLivingDeadRemasteredHD.mp4"},
+  {title:"Night of the Living Dead - WS International Print", src:"https://archive.org/download/Night_Of_The_Living_Dead_raw_HD_WS/NightOfTheLivingDeadWSInternationalPrint.mp4"},
+  {title:"Detour (1945) - Original", src:"https://archive.org/embed/detour-1945"},
+  {title:"Detour (1945) - Colorized", src:"https://archive.org/embed/detour1945HD"},
+  {title:"Detour (1945) - Spanish", src:"https://archive.org/embed/1945-detour-el-desvio-edgar-g-ulmer_202005"},
+  {title:"The Brain That Wouldn't Die - Extended Cut", src:"https://archive.org/download/thebrainthatwouldntdie1962_202009/EXTENDED+CUT.mp4"},
+  {title:"The Brain That Wouldn't Die - Theatrical Cut", src:"https://archive.org/download/thebrainthatwouldntdie1962_202009/THEATRICAL+CUT.mp4"}
+];
+
+const movieListEl = document.getElementById("movieList");
+movies.forEach(m => {
+  const li = document.createElement("li");
+  li.textContent = m.title;
+  movieListEl.appendChild(li);
+});
+
+let currentIndex = 0;
+const iframe = document.getElementById("videoFrame");
+
+function playMovie(index){
+  currentIndex = index;
+  iframe.src = movies[currentIndex].src;
+}
+
+// Start with first movie
+playMovie(0);
+
+// Rotate movies every 5 minutes
+setInterval(()=>{
+  currentIndex = (currentIndex+1) % movies.length;
+  playMovie(currentIndex);
+}, 300000); // 300000 ms = 5 minutes
 </script>
 
 </body>
